@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { googleLogout } from '@react-oauth/google';
 import DashHome from './Components/Home';
 import Currents from './Components/Currents';
 import './Styles/Dashboard.css';
-import {Home, HourglassTop, History, Logout, LocationOn} from '@mui/icons-material';
+import {
+  Home,
+  HourglassTop,
+  History,
+  Logout,
+  LocationOn,
+} from '@mui/icons-material';
+
+import { getAuth, signOut } from 'firebase/auth';
+
+import db from '../db';
 
 const Dashboard = ({ setUser }) => {
   const [active, setActive] = useState(0);
+
+  const auth = getAuth();
 
   const MenuItem = (name, icon, idx, onClickHandler) => {
     return (
@@ -15,9 +26,7 @@ const Dashboard = ({ setUser }) => {
         className={`menuItem ${idx === active ? 'activeMenu' : ''}`}
         onClick={onClickHandler}
       >
-        <Box sx={{ marginRight: '10px' }}>
-          {icon}
-        </Box>
+        <Box sx={{ marginRight: '10px' }}>{icon}</Box>
         <Typography
           variant="subtitle1"
           container="div"
@@ -37,21 +46,26 @@ const Dashboard = ({ setUser }) => {
             Sky Drop
           </Typography>
           <Box className="menuItemCont">
-            {MenuItem('Home', <Home/>, 0, () => {
+            {MenuItem('Home', <Home />, 0, () => {
               setActive(0);
             })}
-            {MenuItem('Current Requests', <HourglassTop/>, 1, () => {
+            {MenuItem('Current Requests', <HourglassTop />, 1, () => {
               setActive(1);
             })}
-            {MenuItem('Package History', <History/>, 2, () => {
+            {MenuItem('Package History', <History />, 2, () => {
               setActive(2);
             })}
-            {MenuItem('Master Map', <LocationOn/>, 3, () => {
+            {MenuItem('Master Map', <LocationOn />, 3, () => {
               setActive(3);
             })}
-            {MenuItem('Logout', <Logout/>, 4, () => {
-              googleLogout();
-              setUser(null);
+            {MenuItem('Logout', <Logout />, 4, () => {
+              signOut(auth)
+                .then(() => {
+                  setUser(null);
+                })
+                .catch((error) => {
+                  alert('Failed to logout. Try again later!');
+                });
             })}
           </Box>
         </Grid>

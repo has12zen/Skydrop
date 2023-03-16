@@ -5,9 +5,6 @@ import { useNavigate, useRoutes } from 'react-router-dom';
 import passProps from './routes';
 import './App.css';
 
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { CLIENT_ID } from './constants';
-
 const App = () => {
   const navigate = useNavigate();
 
@@ -28,11 +25,7 @@ const App = () => {
     }
   }, [user]);
 
-  return (
-    <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <div className="App">{routing}</div>
-    </GoogleOAuthProvider>
-  );
+  return <div className="App">{routing}</div>;
 };
 
 export default App;

@@ -30,7 +30,7 @@ const App = () => {
 
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <div className="App">{routing}</div>;
+      <div className="App">{routing}</div>
     </GoogleOAuthProvider>
   );
 };

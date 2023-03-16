@@ -1,22 +1,10 @@
-.dashContainer{
-  background-color: #2d8e57;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.dashContentContainer{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px
-}
 .dashContent{
   background-color: white;
   border-radius: 30px;
   display: flex;
   height: 100%;
   width: 100% !important;
+  text-align: left;
 }
 .menuItemCont{
   display: flex;

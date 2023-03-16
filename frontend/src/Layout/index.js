@@ -7,7 +7,7 @@ import { googleLogout } from '@react-oauth/google';
 const Layout = ({ user, setUser }) => {
   return (
     <div style={{ minHeight: '100vh', width: '100%' }}>
-      {user && (
+      {/* {user && (
         <div style={{ paddingRight: '10px', paddingTop: '5px' }}>
           <Button
             onClick={() => {
@@ -19,7 +19,7 @@ const Layout = ({ user, setUser }) => {
             LOGOUT
           </Button>
         </div>
-      )}
+      )} */}
       <Outlet />
     </div>
   );

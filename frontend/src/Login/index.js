@@ -8,7 +8,9 @@ import {
 
 import db from '../db';
 import { Button, CircularProgress, Typography } from '@mui/material';
-import './login.css';
+
+import LandingAnimation from './LandingAnimation';
+import './index.css';
 
 const Login = ({ setUser }) => {
   const provider = new GoogleAuthProvider();
@@ -28,10 +30,10 @@ const Login = ({ setUser }) => {
   }, []);
   const [headingIndex, setHeadingIndex] = useState(0);
   const alternateHeadings = [
-    "Ship anywhere, anytime",
-    "The Ultimate Shipping Solution",
+    'Ship anywhere, anytime',
+    'The Ultimate Shipping Solution',
     "Cuz we know you're lazy",
-    "Sky's the Limit? Not Anymore!"
+    "Sky's the Limit? Not Anymore!",
   ];
 
   const login = () => {
@@ -49,11 +51,15 @@ const Login = ({ setUser }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const headingElement = document.querySelector('.heading');
+      if (!headingElement) return;
+
       headingElement.classList.remove('typing');
       void headingElement.offsetWidth;
       headingElement.classList.add('erasing');
       setTimeout(() => {
-        setHeadingIndex(headingIndex => (headingIndex + 1) % alternateHeadings.length);
+        setHeadingIndex(
+          (headingIndex) => (headingIndex + 1) % alternateHeadings.length
+        );
         headingElement.classList.remove('erasing');
         void headingElement.offsetWidth;
         headingElement.classList.add('typing');
@@ -65,22 +71,33 @@ const Login = ({ setUser }) => {
   return (
     <>
       <div className="container">
-        <h1 className="logo">SkyDrop</h1>
-        <div width='fit-content'>
-        <h2 className="heading">{alternateHeadings[headingIndex]}</h2>
-        </div>
         {isLoading ? (
-          <CircularProgress />
+          <>
+            <h1 className="logo">SkyDrop</h1>
+            <div style={{ marginTop: '30px' }}>
+              <CircularProgress />
+            </div>
+          </>
         ) : (
-          <Button
-            variant="contained"
-            onClick={() => {
-              login();
-            }}
-            className="button"
-          >
-            Login with Google
-          </Button>
+          <div>
+            <div class="landing-banner">
+              <LandingAnimation />
+            </div>
+            <div class="login-section">
+              <div width="fit-content">
+                <h2 className="heading">{alternateHeadings[headingIndex]}</h2>
+              </div>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  login();
+                }}
+                className="button"
+              >
+                Login with Google
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </>

@@ -7,7 +7,8 @@ import {
 } from 'firebase/auth';
 
 import db from '../db';
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
+import './login.css';
 
 const Login = ({ setUser }) => {
   const provider = new GoogleAuthProvider();
@@ -25,6 +26,13 @@ const Login = ({ setUser }) => {
       } else setIsLoading(false);
     });
   }, []);
+  const [headingIndex, setHeadingIndex] = useState(0);
+  const alternateHeadings = [
+    "Ship anywhere, anytime",
+    "The Ultimate Shipping Solution",
+    "Cuz we know you're lazy",
+    "Sky's the Limit? Not Anymore!"
+  ];
 
   const login = () => {
     signInWithPopup(auth, provider)
@@ -38,28 +46,44 @@ const Login = ({ setUser }) => {
       });
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const headingElement = document.querySelector('.heading');
+      headingElement.classList.remove('typing');
+      void headingElement.offsetWidth;
+      headingElement.classList.add('erasing');
+      setTimeout(() => {
+        setHeadingIndex(headingIndex => (headingIndex + 1) % alternateHeadings.length);
+        headingElement.classList.remove('erasing');
+        void headingElement.offsetWidth;
+        headingElement.classList.add('typing');
+      }, 2000);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [alternateHeadings.length]);
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-      }}
-    >
-      {isLoading ? (
-        <CircularProgress />
-      ) : (
-        <Button
-          variant="contained"
-          onClick={() => {
-            login();
-          }}
-        >
-          Login with Google
-        </Button>
-      )}
-    </div>
+    <>
+      <div className="container">
+        <h1 className="logo">SkyDrop</h1>
+        <div width='fit-content'>
+        <h2 className="heading">{alternateHeadings[headingIndex]}</h2>
+        </div>
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <Button
+            variant="contained"
+            onClick={() => {
+              login();
+            }}
+            className="button"
+          >
+            Login with Google
+          </Button>
+        )}
+      </div>
+    </>
   );
 };
 

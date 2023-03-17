@@ -1,0 +1,76 @@
+/* App.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: #282626;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  background-color: #f8f8f8;
+}
+.heading {
+  margin-bottom: 32px;
+  font-size: 2.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 0.15em solid #0072c6;
+  animation: typing 2s steps(30, end), blink-caret 0.5s step-end infinite;
+}
+.typing{
+  animation: typing 2s steps(30, end), blink-caret 0.5s step-end infinite;
+}
+.erasing{
+  animation: erasing 2s steps(30, end), blink-caret 0.5s step-end infinite;
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  50% {
+    border-right-color: transparent;
+  }
+  100% {
+    width: 100%;
+    border-right-color: #0072c6;
+  }
+}
+
+@keyframes erasing {
+  0% {
+    width: 100%;
+  }
+  50% {
+    border-right-color: #0072c6;
+  }
+  100% {
+    width: 0;
+    border-right-color: transparent;
+  }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #0072c6 }
+}
+
+
+.subheading {
+  margin-bottom: 32px;
+  font-size: 1.5rem;
+}
+
+.button {
+  margin: 16px;
+  padding: 12px 48px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}

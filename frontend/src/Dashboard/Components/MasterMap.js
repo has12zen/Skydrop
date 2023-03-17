@@ -1,24 +1,27 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { MapProvider,useMap } from 'react-map-gl';
 import { LiveMap } from '../../Components/Map/liveMap';
-import {  Card, CardContent,  Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import '../Styles/MasterMap.css';
 
-const DemoCard = ({ drone }) => {
+const DemoCard = ({ drone}) => {
+  const { myMapA } = useMap();
   return (
-    <Card sx={{ maxWidth: 275 }}>
+    <Card
+      sx={{ maxWidth: 275 }}
+      onClick={() => {
+        myMapA.flyTo({ center: [drone.longitude, drone.latitude] });
+      }}
+    >
       <CardContent>
         <Typography variant="h5" component="h2">
           {drone.color}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          latitude:{drone.latitude}\n
-
-          longitude:{drone.longitude}
+          latitude:{drone.latitude}\n longitude:{drone.longitude}
         </Typography>
-        <Typography variant="body2">
-            This is drone info
-        </Typography>
+        <Typography variant="body2">This is drone info</Typography>
       </CardContent>
     </Card>
   );
@@ -75,37 +78,39 @@ function MasterMap() {
       },
     ],
   };
- 
+
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-        }}
-      >
+      <MapProvider>
         <div
           style={{
-            overflow: 'auto',
+            display: 'flex',
+            width: '100%',
           }}
         >
-          {drones.map((drone, index) => (
-            <div key={index} item xs={12}>
-              <DemoCard drone={drone} />
-            </div>
-          ))}
+          <div
+            style={{
+              overflow: 'auto',
+            }}
+          >
+            {drones.map((drone, index) => (
+              <div key={index} item xs={12}>
+                <DemoCard drone={drone}  />
+              </div>
+            ))}
+          </div>
+          <div id="mapCont">
+            <LiveMap
+              dataOne={dataOne}
+              viewState={viewState}
+              setViewState={setViewState}
+              drones={drones}
+              warehouses={warehouses}
+              markers={markers}
+            />
+          </div>
         </div>
-        <div id="mapCont">
-          <LiveMap
-            dataOne={dataOne}
-            viewState={viewState}
-            setViewState={setViewState}
-            drones={drones}
-            warehouses={warehouses}
-            markers={markers}
-          />
-        </div>
-      </div>
+      </MapProvider>
     </>
   );
 }

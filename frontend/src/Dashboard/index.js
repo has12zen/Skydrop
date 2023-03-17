@@ -49,7 +49,7 @@ const Dashboard = ({ setUser }) => {
     return (
       <Box
         className={`menuItem ${idx === active ? 'activeMenu' : ''}`}
-        onClick={() => navigate(route)}
+        onClick={() => onClickHandler? onClickHandler() : navigate(route)}
       >
         <Box sx={{ marginRight: '10px' }}>{icon}</Box>
         <Typography
@@ -71,7 +71,7 @@ const Dashboard = ({ setUser }) => {
             Sky Drop
           </Typography>
           <Box className="menuItemCont">
-            {MenuItem('Home', '/dashboard', <Home />, 0)}
+            {MenuItem('Home', '/', <Home />, 0)}
             {MenuItem('Current Requests', 'currents', <HourglassTop />, 1)}
             {MenuItem('Package History', 'history', <History />, 2)}
             {MenuItem('Master Map', 'map', <LocationOn />, 3)}

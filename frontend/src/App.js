@@ -20,7 +20,7 @@ const App = () => {
     console.log({ user });
 
     if (user) {
-      navigate('/dashboard');
+      navigate('/');
     }
   }, [user]);
 

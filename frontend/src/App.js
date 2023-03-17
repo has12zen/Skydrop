@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import { useNavigate, useRoutes } from 'react-router-dom';
 
 import passProps from './routes';

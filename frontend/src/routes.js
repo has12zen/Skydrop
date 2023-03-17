@@ -3,6 +3,7 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import { DefaultMap } from './Components/Map';
 import { LiveMap } from './Components/Map/liveMap';
+import {NotifTest} from './Notif/test';
 
 const passProps = (user, setUser) => {
   if (user)
@@ -32,6 +33,10 @@ const passProps = (user, setUser) => {
     {
       path: '/liveMap',
       element: <LiveMap />,
+    },
+    {
+      path: '/notifTest',
+      element: <NotifTest />,
     }
   ];
 };

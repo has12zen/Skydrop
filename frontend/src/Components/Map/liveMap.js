@@ -32,8 +32,9 @@ function LiveMap(props) {
                                 key={`marker-drone-${index}`}
                                 longitude={drone.longitude}
                                 latitude={drone.latitude}
+                                color={drone.color}
                             >
-                                <DronePin size={30} />
+                                <DronePin size={30} fill={drone.color} />
                             </Marker>
                         );
                     })}

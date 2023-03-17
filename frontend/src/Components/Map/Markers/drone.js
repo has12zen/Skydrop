@@ -4,14 +4,14 @@ import React, { PureComponent } from 'react';
 export default class WarehousePin extends PureComponent {
 
   render() {
-    const { size = 20, onClick } = this.props;
+    const { size = 20, onClick ,fill='black'} = this.props;
 
     return (
       <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
         width={`${size}px`} height={`${size}px`} viewBox="0 0 1280.000000 1240.000000"
         preserveAspectRatio="xMidYMid meet" style={{ filter: 'drop-shadow(2px 4px 6px black)' }} >
         <g transform="translate(0.000000,1240.000000) scale(0.100000,-0.100000)"
-          fill="#000000" stroke="none">
+           stroke="none"fill={fill}>
           <path d="M3875 12390 c-336 -85 -1036 -696 -1374 -1199 l-61 -91 -48 29 c-26
      16 -83 42 -127 57 -71 25 -94 28 -210 28 -148 0 -217 -14 -329 -71 -147 -73
      -253 -183 -327 -338 -79 -165 -89 -348 -30 -524 17 -51 31 -94 31 -95 0 -2

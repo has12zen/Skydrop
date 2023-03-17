@@ -18,7 +18,7 @@ const eraseCookie = (name) => {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
 
-const Dashboard = ({ setUser }) => {
+const Dashboard = ({ setUser, user }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
 
@@ -41,12 +41,32 @@ const Dashboard = ({ setUser }) => {
         setActive(3);
         break;
       }
+      case 'new-pickup': {
+        setActive(1);
+        break;
+      }
+      case 'order-history': {
+        setActive(2);
+        break;
+      }
       default:
         setActive(0);
     }
   }, [navigate]);
 
   const auth = getAuth();
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        eraseCookie('accessToken');
+
+        setUser(null);
+      })
+      .catch((error) => {
+        alert('Failed to logout. Try again later!');
+      });
+  };
 
   const MenuItem = (name, route = '/', icon, idx, onClickHandler = null) => {
     return (
@@ -74,21 +94,26 @@ const Dashboard = ({ setUser }) => {
             Sky Drop
           </Typography>
           <Box className="menuItemCont">
-            {MenuItem('Home', '/', <Home />, 0)}
-            {MenuItem('Current Requests', 'currents', <HourglassTop />, 1)}
-            {MenuItem('Package History', 'history', <History />, 2)}
-            {MenuItem('Master Map', 'map', <LocationOn />, 3)}
-            {MenuItem('Logout', '', <Logout />, 4, () => {
-              signOut(auth)
-                .then(() => {
-                  eraseCookie('accessToken');
-
-                  setUser(null);
-                })
-                .catch((error) => {
-                  alert('Failed to logout. Try again later!');
-                });
-            })}
+            {user.admin ? (
+              <>
+                {MenuItem('Home', '/', <Home />, 0)}
+                {MenuItem('Current Requests', 'currents', <HourglassTop />, 1)}
+                {MenuItem('Package History', 'history', <History />, 2)}
+                {MenuItem('Master Map', 'map', <LocationOn />, 3)}
+                {MenuItem('Logout', '', <Logout />, 4, () => {
+                  logout();
+                })}
+              </>
+            ) : (
+              <>
+                {MenuItem('Home', '/', <Home />, 0)}
+                {MenuItem('Request Pickup', 'new-pickup', <HourglassTop />, 1)}
+                {MenuItem('Order History', 'order-history', <History />, 2)}
+                {MenuItem('Logout', '', <Logout />, 3, () => {
+                  logout();
+                })}
+              </>
+            )}
           </Box>
         </Grid>
         <Grid

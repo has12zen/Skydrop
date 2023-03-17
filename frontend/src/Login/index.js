@@ -42,7 +42,7 @@ const Login = ({ setUser }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const loginUser = async (user) => {
-    const { displayName, email, photoURL } = user;
+    const { email } = user;
 
     setCookie('accessToken', user.accessToken, 5);
 
@@ -50,9 +50,9 @@ const Login = ({ setUser }) => {
       .post('/api/auth/login', email)
       .then((res) => {
         console.log(res.data);
-        const { name: displayName, email, image: photoURL } = res.data;
+        const { name, email, image, admin } = res.data;
 
-        setUser({ displayName, email, photoURL });
+        setUser({ name, email, image, admin });
       })
       .catch((err) => {
         console.log({ err });

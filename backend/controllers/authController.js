@@ -43,7 +43,7 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.login = catchAsync(async (req, res, next) => {
-  let user = await User.getUserByEmail({ email: req.user.email });
+  let user = await User.getUserByEmail(req.user.email);
 
   if (!user) {
     await User.create({

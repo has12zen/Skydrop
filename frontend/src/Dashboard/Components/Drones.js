@@ -22,7 +22,7 @@ const Drones = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{mt:3}}>
       <Typography variant="h5">Drones</Typography>
       <Paper elevation={3} sx={{ mt: 3 }}>
         <Box sx={{textAlign: "center"}}>

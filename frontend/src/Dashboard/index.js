@@ -39,7 +39,7 @@ const Dashboard = ({ setUser }) => {
   };
 
   return (
-    <Box sx={{ height: '100vh', backgroundColor: '#33906c' }}>
+    <Box sx={{ height: '100vh', backgroundColor: '#4599e6' }}>
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={2} sx={{ paddingTop: '20px' }}>
           <Typography variant="h3" sx={{ textAlign: 'center' }}>
@@ -69,8 +69,8 @@ const Dashboard = ({ setUser }) => {
             })}
           </Box>
         </Grid>
-        <Grid item xs sx={{ padding: '15px 15px 15px 0px' }}>
-          <Box className="dashContent">
+        <Grid item xs sx={{ padding: '15px 15px 15px 0px', maxHeight: "100vh" }}>
+          <Box className="dashContent" sx={{overflow: "auto", height: "100%"}}>
             {active === 0 && <DashHome setActive={setActive} />}
             {active === 1 && <Currents />}
           </Box>

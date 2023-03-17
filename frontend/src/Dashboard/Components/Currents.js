@@ -1,5 +1,5 @@
-import { ArrowDropDown, Send } from '@mui/icons-material';
-import { Avatar, Button, Chip, Collapse, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { ArrowDropDown } from '@mui/icons-material';
+import { Avatar, Chip, Collapse, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react'
 
@@ -29,7 +29,10 @@ const GetChip = (chipId) => {
 };
 
 const Current = () => {
+  const [page, setPage] = useState(0);
+  
   const Row = (props) => {
+    const data = props.row;
     const [open, setOpen] = useState(false);
     const plocation =
       '23 Street, 2nd Cross, 3rd Main, 4th Block, 5th Ward, 6th Town, 7th City, 8th State, 9th Country';
@@ -51,29 +54,29 @@ const Current = () => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src='https://picsum.photos/100' />
               <Typography variant="subtitle1" sx={{ ml: 4, fontWeight: '700' }}>
-                User Name
+                {data.userName}
               </Typography>
             </Box>
           </TableCell>
           <TableCell align='center'>
             <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
-              100 kg
+              {data.weight}
             </Typography>
           </TableCell>
           <TableCell align='center'>
             <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
-              100cm x 100cm x 100cm
+              {data.size}
             </Typography>
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: '600' }}>
-            17 Jun 2001
+            {data.requestDate}
           </TableCell>
           <TableCell align="center">
-            {GetChip(1)}
+            {GetChip(data.status)}
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell colSpan={4} sx={{ p: 0 }}>
+          <TableCell colSpan={6} sx={{ p: 0 }}>
             <Collapse in={open}>
               <Box
                 sx={{ px: 4, py: 2, display: 'flex', justifyContent: 'center' }}
@@ -97,7 +100,115 @@ const Current = () => {
       </React.Fragment>
     );
   };
-  
+
+  const data = [
+    {
+      userName: 'User Name1',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 0,
+    },
+    {
+      userName: 'User Name2',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name3',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 0,
+    },
+    {
+      userName: 'User Name4',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name5',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name6',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name1',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name2',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name3',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name4',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name5',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name6',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name1',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name2',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+    {
+      userName: 'User Name3',
+      weight: '100 kg',
+      size: '100cm x 100cm x 100cm',
+      requestDate: '17 Jun 2001',
+      status: 1,
+    },
+  ];
+
   return (
     <Container>
       <TableContainer component={Paper} sx={{ mt: 3 }}>
@@ -116,24 +227,35 @@ const Current = () => {
               <TableCell className="tableheader" align="center">
                 Request Date
               </TableCell>
-              <TableCell className="tableheader" align="center">
+              <TableCell className="tableheader" align="center" width={100}>
                 Status
               </TableCell>
             </TableHead>
-            <TableBody>
-              <Row />
-              <Row />
-              <Row />
-              <Row />
-              <Row />
-              <Row />
+            <TableBody sx={{overflow: "scroll", height: "70vh"}}>
+              {(data.slice(page*5, page*5+5)).map((row) => {
+                return (
+                  <Row
+                    key={row.userName}
+                    row={row}
+                  />
+                );
+              })}
             </TableBody>
           </Table>
-          <Box sx={{ textAlign: 'right' }}>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={10}
+              rowsPerPage={5}
+              page={page}
+              onPageChange={(e, newpage) => {console.log(e);setPage(newpage)}}
+              onChangeRowsPerPage={() => {}}
+            />
+          {/* <Box sx={{ textAlign: 'right' }}>
             <Button variant="text" endIcon={<Send />} sx={{ color: 'black' }}>
               Show all
             </Button>
-          </Box>
+          </Box> */}
         </TableContainer>
     </Container>
   );

@@ -7,6 +7,7 @@ import { NotifTest } from './Notif/test';
 import DashHome from './Dashboard/Components/Home';
 import Current from './Dashboard/Components/Currents';
 import History from './Dashboard/Components/History';
+import MasterMap from './Dashboard/Components/MasterMap';
 
 const passProps = (user, setUser) => {
   if (user)
@@ -33,7 +34,7 @@ const passProps = (user, setUser) => {
               },
               {
                 path: 'map',
-                element: null
+                element: <MasterMap />
               },
             ],
           },

@@ -1,28 +1,24 @@
 const dotenv = require("dotenv");
 dotenv.config();
-const { OAuth2Client } = require("google-auth-library");
 
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
-const client = new OAuth2Client(process.env.CLIENT_ID);
+const { getAuth } = require("firebase-admin/auth");
 
 exports.verifyToken = catchAsync(async (req, res, next) => {
-  const token = req.cookies.jwt;
+  const { accessToken } = req.cookies;
 
-  if (!token) return next(new AppError("User not logged in.", 403));
+  if (!accessToken)
+    return next(
+      new AppError("You do not have permission to perform this action", 403)
+    );
 
-  client
-    .verifyIdToken({ idToken: token, audience: process.env.CLIENT_ID })
-    .then((res) => {
-      req.user = res.payload;
+  const data = await getAuth().verifyIdToken(accessToken);
+  req.user = data;
 
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  next();
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -46,52 +42,26 @@ exports.restrictTo = (...roles) => {
   };
 };
 
-exports.stopBlacklisted = catchAsync(async (req, res, next) => {
-  if (req.user.isBlacklisted)
-    return next(
-      new AppError("You are blocked from performing this action", 403)
-    );
-
-  next();
-});
-
 exports.login = catchAsync(async (req, res, next) => {
-  const { token } = req.body;
-
-  if (!token) return next(new AppError("User not logged in.", 403));
-
-  let data = await client.verifyIdToken({
-    idToken: token,
-    audience: process.env.CLIENT_ID,
-  });
-
-  let user = await User.getUserByEmail({ email: data.payload.email });
+  let user = await User.getUserByEmail({ email: req.user.email });
 
   if (!user) {
-    user = User.create({
+    await User.create({
       email: req.user.email,
-      name: req.user.given_name,
-      img: req.user.picture,
-    }) 
-    .then(() => {
-      console.log('New user saved to Firestore!');
-    })
-    .catch((error) => {
-      console.error('Error saving user:', error);
+      name: req.user.name,
+      image: req.user.picture,
+      id: req.user.uid,
     });
+
+    user = {
+      email: req.user.email,
+      name: req.user.name,
+      image: req.user.picture,
+      id: req.user.uid,
+    };
   }
 
-  res.cookie("jwt", req.body.token, {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    secure: req.secure || req.header("x-forwarded-proto") === "https",
-  });
-
   res.send(user);
-
-  // next();
 });
 
 exports.logout = catchAsync(async (req, res, next) => {

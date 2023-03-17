@@ -14,13 +14,17 @@ import { getAuth, signOut } from 'firebase/auth';
 
 import db from '../db';
 
+const eraseCookie = (name) => {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 const Dashboard = ({ setUser }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-  
+
   useEffect(() => {
     const location = window.location.pathname.split('/')[1];
-    switch(location){
+    switch (location) {
       case undefined: {
         setActive(0);
         break;
@@ -37,11 +41,10 @@ const Dashboard = ({ setUser }) => {
         setActive(3);
         break;
       }
-      default: setActive(0);
+      default:
+        setActive(0);
     }
-  }, [navigate])
-  
-  
+  }, [navigate]);
 
   const auth = getAuth();
 
@@ -49,7 +52,7 @@ const Dashboard = ({ setUser }) => {
     return (
       <Box
         className={`menuItem ${idx === active ? 'activeMenu' : ''}`}
-        onClick={() => onClickHandler? onClickHandler() : navigate(route)}
+        onClick={() => (onClickHandler ? onClickHandler() : navigate(route))}
       >
         <Box sx={{ marginRight: '10px' }}>{icon}</Box>
         <Typography
@@ -78,6 +81,8 @@ const Dashboard = ({ setUser }) => {
             {MenuItem('Logout', '', <Logout />, 4, () => {
               signOut(auth)
                 .then(() => {
+                  eraseCookie('accessToken');
+
                   setUser(null);
                 })
                 .catch((error) => {
@@ -86,8 +91,15 @@ const Dashboard = ({ setUser }) => {
             })}
           </Box>
         </Grid>
-        <Grid item xs sx={{ padding: '15px 15px 15px 0px', maxHeight: "100vh" }}>
-          <Box className="dashContent" sx={{overflow: "auto", height: "100%"}}>
+        <Grid
+          item
+          xs
+          sx={{ padding: '15px 15px 15px 0px', maxHeight: '100vh' }}
+        >
+          <Box
+            className="dashContent"
+            sx={{ overflow: 'auto', height: '100%' }}
+          >
             <Outlet />
           </Box>
         </Grid>

@@ -5,12 +5,34 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
 } from 'firebase/auth';
-
+import axios from 'axios';
 import db from '../db';
-import { Button, CircularProgress, Typography } from '@mui/material';
+
+import { Button, CircularProgress } from '@mui/material';
 
 import LandingAnimation from './LandingAnimation';
 import './index.css';
+
+const setCookie = (name, value, days) => {
+  var expires = '';
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = '; expires=' + date.toUTCString();
+  }
+  document.cookie = name + '=' + (value || '') + expires + '; path=/';
+};
+
+const getCookie = (name) => {
+  var nameEQ = name + '=';
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
 
 const Login = ({ setUser }) => {
   const provider = new GoogleAuthProvider();
@@ -19,12 +41,30 @@ const Login = ({ setUser }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const loginUser = async (user) => {
+    const { displayName, email, photoURL } = user;
+
+    setCookie('accessToken', user.accessToken, 5);
+
+    axios
+      .post('/api/auth/login', email)
+      .then((res) => {
+        console.log(res.data);
+        const { name: displayName, email, image: photoURL } = res.data;
+
+        setUser({ displayName, email, photoURL });
+      })
+      .catch((err) => {
+        console.log({ err });
+
+        alert('Failed to login!');
+      });
+  };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const { displayName, email, photoURL } = user;
-
-        setUser({ displayName, email, photoURL });
+        loginUser(user);
       } else setIsLoading(false);
     });
   }, []);
@@ -80,10 +120,10 @@ const Login = ({ setUser }) => {
           </>
         ) : (
           <div>
-            <div class="landing-banner">
+            <div className="landing-banner">
               <LandingAnimation />
             </div>
-            <div class="login-section">
+            <div className="login-section">
               <div width="fit-content">
                 <h2 className="heading">{alternateHeadings[headingIndex]}</h2>
               </div>

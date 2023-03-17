@@ -19,7 +19,7 @@ const Dashboard = ({ setUser }) => {
   const [active, setActive] = useState(0);
   
   useEffect(() => {
-    const location = window.location.pathname.split('/')[2];
+    const location = window.location.pathname.split('/')[1];
     switch(location){
       case undefined: {
         setActive(0);

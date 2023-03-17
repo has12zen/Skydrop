@@ -7,7 +7,7 @@ import add from '../Images/add.webp';
 const Home = ({ setActive }) => {
   return (
     <Grid container sx={{ padding: '2vmax 4vmax !important', display: 'flex' }}>
-      <Grid item sx={{ mr: 4 }}>
+      <Grid item xs={8} sx={{ mr: 4 }}>
         <Requests setActive={setActive} />
       </Grid>
       <Grid item xs>

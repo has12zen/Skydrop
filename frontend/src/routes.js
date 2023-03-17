@@ -3,7 +3,10 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import { DefaultMap } from './Components/Map';
 import { LiveMap } from './Components/Map/liveMap';
-import {NotifTest} from './Notif/test';
+import { NotifTest } from './Notif/test';
+import DashHome from './Dashboard/Components/Home';
+import Current from './Dashboard/Components/Currents';
+import History from './Dashboard/Components/History';
 
 const passProps = (user, setUser) => {
   if (user)
@@ -12,7 +15,28 @@ const passProps = (user, setUser) => {
         path: '/',
         element: <Layout user={user} setUser={setUser} />,
         children: [
-          { path: '/dashboard', element: <Dashboard setUser={setUser} /> },
+          {
+            path: '/dashboard',
+            element: <Dashboard setUser={setUser} />,
+            children: [
+              {
+                path: '',
+                element: <DashHome />,
+              },
+              {
+                path: 'currents',
+                element: <Current />
+              },
+              {
+                path: 'history',
+                element: <History />
+              },
+              {
+                path: 'map',
+                element: null
+              },
+            ],
+          },
         ],
       },
     ];
@@ -37,7 +61,7 @@ const passProps = (user, setUser) => {
     {
       path: '/notifTest',
       element: <NotifTest />,
-    }
+    },
   ];
 };
 

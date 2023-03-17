@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import DashHome from './Components/Home';
-import Currents from './Components/Currents';
+import { Outlet, useNavigate } from 'react-router-dom';
 import './Styles/Dashboard.css';
 import {
   Home,
@@ -16,15 +15,41 @@ import { getAuth, signOut } from 'firebase/auth';
 import db from '../db';
 
 const Dashboard = ({ setUser }) => {
+  const navigate = useNavigate();
   const [active, setActive] = useState(0);
+  
+  useEffect(() => {
+    const location = window.location.pathname.split('/')[2];
+    switch(location){
+      case undefined: {
+        setActive(0);
+        break;
+      }
+      case 'currents': {
+        setActive(1);
+        break;
+      }
+      case 'history': {
+        setActive(2);
+        break;
+      }
+      case 'map': {
+        setActive(3);
+        break;
+      }
+      default: setActive(0);
+    }
+  }, [navigate])
+  
+  
 
   const auth = getAuth();
 
-  const MenuItem = (name, icon, idx, onClickHandler) => {
+  const MenuItem = (name, route = '/', icon, idx, onClickHandler = null) => {
     return (
       <Box
         className={`menuItem ${idx === active ? 'activeMenu' : ''}`}
-        onClick={onClickHandler}
+        onClick={() => navigate(route)}
       >
         <Box sx={{ marginRight: '10px' }}>{icon}</Box>
         <Typography
@@ -46,19 +71,11 @@ const Dashboard = ({ setUser }) => {
             Sky Drop
           </Typography>
           <Box className="menuItemCont">
-            {MenuItem('Home', <Home />, 0, () => {
-              setActive(0);
-            })}
-            {MenuItem('Current Requests', <HourglassTop />, 1, () => {
-              setActive(1);
-            })}
-            {MenuItem('Package History', <History />, 2, () => {
-              setActive(2);
-            })}
-            {MenuItem('Master Map', <LocationOn />, 3, () => {
-              setActive(3);
-            })}
-            {MenuItem('Logout', <Logout />, 4, () => {
+            {MenuItem('Home', '/dashboard', <Home />, 0)}
+            {MenuItem('Current Requests', 'currents', <HourglassTop />, 1)}
+            {MenuItem('Package History', 'history', <History />, 2)}
+            {MenuItem('Master Map', 'map', <LocationOn />, 3)}
+            {MenuItem('Logout', '', <Logout />, 4, () => {
               signOut(auth)
                 .then(() => {
                   setUser(null);
@@ -71,8 +88,7 @@ const Dashboard = ({ setUser }) => {
         </Grid>
         <Grid item xs sx={{ padding: '15px 15px 15px 0px', maxHeight: "100vh" }}>
           <Box className="dashContent" sx={{overflow: "auto", height: "100%"}}>
-            {active === 0 && <DashHome setActive={setActive} />}
-            {active === 1 && <Currents />}
+            <Outlet />
           </Box>
         </Grid>
       </Grid>

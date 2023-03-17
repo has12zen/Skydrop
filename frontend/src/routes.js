@@ -26,7 +26,7 @@ const passProps = (user, setUser) => {
         children: [
           {
             path: '',
-            element: <Dashboard setUser={setUser} />,
+            element: <Dashboard user={user} setUser={setUser} />,
             children: [
               {
                 path: '',

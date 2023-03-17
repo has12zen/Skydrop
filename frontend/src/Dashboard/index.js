@@ -94,7 +94,7 @@ const Dashboard = ({ setUser, user }) => {
             Sky Drop
           </Typography>
           <Box className="menuItemCont">
-            {user.admin ? (
+            {user?.admin ? (
               <>
                 {MenuItem('Home', '/', <Home />, 0)}
                 {MenuItem('Current Requests', 'currents', <HourglassTop />, 1)}

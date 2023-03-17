@@ -24,15 +24,15 @@ exports.getMe = catchAsync(async (req, res, next) => {
 
   if (!user) {
     user = User.create({
-        email: req.user.email,
-        name: req.user.given_name,
-        img: req.user.picture,
-      }) 
+      email: req.user.email,
+      name: req.user.given_name,
+      img: req.user.picture,
+    })
       .then(() => {
-        console.log('New user saved to Firestore!');
+        console.log("New user saved to Firestore!");
       })
       .catch((error) => {
-        console.error('Error saving user:', error);
+        console.error("Error saving user:", error);
       });
   }
 
@@ -50,18 +50,18 @@ exports.getUserById = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: {
-      doc,
+      doc: doc.data(),
     },
   });
-})
+});
 
 exports.updateUser = catchAsync(async (req, res, next) => {
   const msg = await User.findByIdAndUpdate(req.params.id, req.body);
-  if(msg === 'error'){
+  if (msg === "error") {
     return next(new AppError("No document found with that ID", 404));
   }
   res.status(200).json({
     status: "success",
-    message: "User data updated."
+    message: "User data updated.",
   });
-})
+});

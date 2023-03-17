@@ -6,6 +6,7 @@ const cors = require("cors")
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const requestRoutes = require("./routes/requestRoutes");
+const droneRoutes = require("./routes/droneRoutes");
 
 const path = require("path");
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, "../../client/build")));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/requests", requestRoutes);
+app.use("/api/drones", droneRoutes);
 
 app.all("*", async (req, res, next) => {
   // if (req.originalUrl.startsWith("/api")) {

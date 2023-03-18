@@ -15,7 +15,7 @@ import {
 
 import { DefaultMap } from '../../Components/Map';
 
-import { SearchRounded } from '@mui/icons-material';
+import { CheckRounded, SearchRounded } from '@mui/icons-material';
 import { MapProvider, useMap } from 'react-map-gl';
 
 import axios from 'axios';
@@ -155,6 +155,13 @@ const SelectLocation = ({
             >
               <ListPickUps places={places} setMarker={setMarker} />
             </div>
+
+            <IconButton
+              onClick={handleClose}
+              style={{ position: 'absolute', right: '10px' }}
+            >
+              <CheckRounded fill="green" />
+            </IconButton>
           </div>
         </div>
 
@@ -172,6 +179,10 @@ const SelectLocation = ({
 const RequestPickup = () => {
   const [openPickupDialog, setOpenPickupDialog] = useState(false);
   const [openDestDialog, setOpenDestDialog] = useState(false);
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverPhone, setReceiverPhone] = useState('');
+  const [receiverEmail, setReceiverEmail] = useState('');
+  const [weight, setWeight] = useState(0);
 
   const [pickupMarker, setPickupMarker] = useState({
     latitude: 40.75,
@@ -184,7 +195,7 @@ const RequestPickup = () => {
   });
 
   const placeOrder = () => {
-    const data = { weight: '120' };
+    const data = { weight: weight, pickup: pickupMarker, dest: destMarker, receiverName, receiverPhone, receiverEmail };
 
     axios
       .post('/api/requests/create', data)
@@ -209,7 +220,14 @@ const RequestPickup = () => {
           md={4}
           style={{ margin: '10px 0px 10px 0px' }}
         >
-          <TextField label="Receiver Name" type="text" />
+          <TextField
+            value={receiverName}
+            label="Receiver Name"
+            type="text"
+            onChange={(e) => {
+              setReceiverName(e.target.value);
+            }}
+          />
         </Grid>
         <Grid
           item
@@ -218,7 +236,12 @@ const RequestPickup = () => {
           md={4}
           style={{ margin: '10px 0px 10px 0px' }}
         >
-          <TextField label="Receiver Phone" type="tel" />
+          <TextField
+            value={receiverPhone}
+            label="Receiver Phone"
+            type="tel"
+            onChange={(e) => setReceiverPhone(e.target.value)}
+          />
         </Grid>
         <Grid
           item
@@ -227,9 +250,13 @@ const RequestPickup = () => {
           md={4}
           style={{ margin: '10px 0px 10px 0px' }}
         >
-          <TextField label="Receiver Email" type="email" />
+          <TextField
+            value={receiverEmail}
+            label="Receiver Email"
+            type="email"
+            onChange={(e) => setReceiverEmail(e.target.value)}
+          />
         </Grid>
-
         <Grid item xs={12}>
           <div
             onClick={() => setOpenPickupDialog(true)}
@@ -251,7 +278,8 @@ const RequestPickup = () => {
             onClose={() => setOpenPickupDialog(false)}
           />
         </Grid>
-
+        Pickup Location: lat: {pickupMarker.latitude}, long:
+        {pickupMarker.longitude}
         <Grid item xs={12}>
           <div
             onClick={() => setOpenDestDialog(true)}
@@ -273,7 +301,8 @@ const RequestPickup = () => {
           open={openDestDialog}
           onClose={() => setOpenDestDialog(false)}
         />
-
+        Destination Location: lat: {destMarker.latitude}, long:
+        {destMarker.longitude}
         <Grid
           item
           xs={12}
@@ -281,9 +310,13 @@ const RequestPickup = () => {
           md={4}
           style={{ margin: '10px 0px 10px 0px' }}
         >
-          <TextField label="Payload Weight" type="number" />
+          <TextField
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            label="Payload Weight"
+            type="number"
+          />
         </Grid>
-
         <Grid
           item
           xs={12}
@@ -293,7 +326,9 @@ const RequestPickup = () => {
             alignItems: 'center',
           }}
         >
-          <Button variant="contained">PLACE ORDER</Button>
+          <Button variant="contained" onClick={placeOrder}>
+            PLACE ORDER
+          </Button>
         </Grid>
       </Grid>
     </Box>

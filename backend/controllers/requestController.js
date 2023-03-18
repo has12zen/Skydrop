@@ -62,6 +62,15 @@ exports.update = catchAsync(async (req, res, next) => {
 });
 
 exports.getAll = catchAsync(async (req, res, next) => {
-  console.log("in get all");
-  // const docRef = db.collection("req")
+  const docRef = db.collection("requests");
+  const reqs = await docRef.get();
+  const data = reqs.docs.map((doc) => doc.data());
+  console.log(data);
+
+  res.status(200).json({
+    status: "Success",
+    data: {
+      data,
+    },
+  });
 });

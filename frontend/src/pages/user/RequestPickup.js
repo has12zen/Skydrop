@@ -63,8 +63,8 @@ const SelectLocation = ({
   const [searchText, setSearchText] = useState('');
 
   const [viewState, setViewState] = useState({
-    latitude: 40.75,
-    longitude: -73.98,
+    latitude: 20.149,
+    longitude: 85.665,
     zoom: 12,
   });
 

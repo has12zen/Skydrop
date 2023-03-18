@@ -11,7 +11,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import data from './DummyData';
 
-const Drones = ({ drone, reqs }) => {
+const Drones = ({ drone, reqs}) => {
   const tableRow = (a, b) => {
     return (
       <TableRow sx={{ width: '100%' }}>

@@ -23,17 +23,13 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import {
-  ArrowDropDown,
-  Send,
-  ArrowRightAlt,
-} from '@mui/icons-material';
+import { ArrowDropDown, Send, ArrowRightAlt } from '@mui/icons-material';
 import '../Styles/Requests.css';
 import { getAllOrders } from '../Helper/queries';
 import { GetChip } from '../Helper/helper';
 import data from './DummyData';
 
-const Requests = ({ reqs, setReqs, drone }) => {
+const Requests = ({ reqs, setReqs, drone, setLreqs }) => {
   const [dopen, setDopen] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -59,6 +55,7 @@ const Requests = ({ reqs, setReqs, drone }) => {
       }
     });
     setReqs(temp);
+    setLreqs(temp);
     setLoading(false);
   };
 
@@ -103,10 +100,16 @@ const Requests = ({ reqs, setReqs, drone }) => {
             </Box>
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: '600' }}>
-            {Date(row.createdTime._seconds).toString().slice(0, 24)}
+            {Date(row.createdTime._seconds).toString().slice(0, 15)}
           </TableCell>
           <TableCell align="center">
-            <Box onClick={() => row.status === 'Pending' ? handleOpen(row.id) : null}>{GetChip(row.status)}</Box>
+            <Box
+              onClick={() =>
+                row.status === 'Pending' ? handleOpen(row.id) : null
+              }
+            >
+              {GetChip(row.status)}
+            </Box>
           </TableCell>
         </TableRow>
         <TableRow>
@@ -139,8 +142,8 @@ const Requests = ({ reqs, setReqs, drone }) => {
 
   return (
     <Box sx={{ py: 3 }}>
-      <Backdrop open={loading} sx={{color: '#fff', zIndex: 1000}}>
-        <CircularProgress color='inherit' />
+      <Backdrop open={loading} sx={{ color: '#fff', zIndex: 1000 }}>
+        <CircularProgress color="inherit" />
       </Backdrop>
       <Dialog open={dopen.length !== 0} onClose={handleClose}>
         <DialogTitle sx={{ px: 4 }}>
@@ -154,14 +157,30 @@ const Requests = ({ reqs, setReqs, drone }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              py:2
+              py: 2,
             }}
           >
-            <Box onClick={() => handleStatusChange('Rejected')} sx={{filter: "drop-shadow(0px 0px 5px rgb(0,0,0,0.5))", transform: "scale(1.1)"}}>{GetChip('Rejected')}</Box>
-            <ArrowRightAlt sx={{ mx: 2, transform:"rotate(180deg)" }} />
+            <Box
+              onClick={() => handleStatusChange('Rejected')}
+              sx={{
+                filter: 'drop-shadow(0px 0px 5px rgb(0,0,0,0.5))',
+                transform: 'scale(1.1)',
+              }}
+            >
+              {GetChip('Rejected')}
+            </Box>
+            <ArrowRightAlt sx={{ mx: 2, transform: 'rotate(180deg)' }} />
             {GetChip('Pending')}
             <ArrowRightAlt sx={{ mx: 2 }} />
-            <Box onClick={() => true ? handleStatusChange('Accepted') : null} sx={{filter: "drop-shadow(0px 0px 5px rgb(0,0,0,0.5))", transform: "scale(1.1)"}}>{GetChip('Accepted')}</Box>
+            <Box
+              onClick={() => (true ? handleStatusChange('Accepted') : null)}
+              sx={{
+                filter: 'drop-shadow(0px 0px 5px rgb(0,0,0,0.5))',
+                transform: 'scale(1.1)',
+              }}
+            >
+              {GetChip('Accepted')}
+            </Box>
           </Container>
           {false && (
             <Container sx={{ mt: 3 }}>
@@ -194,7 +213,11 @@ const Requests = ({ reqs, setReqs, drone }) => {
           </TableHead>
           <TableBody>
             {(reqs
-              ? reqs.filter((req) => ['Pending', 'Accepted', 'Active'].includes(req.status)).slice(0, 6)
+              ? reqs
+                  .filter((req) =>
+                    ['Pending', 'Accepted', 'Active'].includes(req.status)
+                  )
+                  .slice(0, 6)
               : []
             ).map((row) => {
               return <Row key={row.userName} row={row} />;

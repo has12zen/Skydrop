@@ -58,7 +58,7 @@ const Current = () => {
             </Typography>
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: '600' }}>
-            {Date(data.createdTime._seconds).toString().slice(0, 24)}
+            {Date(data.createdTime._seconds).toString().slice(0, 15)}
           </TableCell>
           <TableCell align="center">{GetChip(data.status)}</TableCell>
         </TableRow>

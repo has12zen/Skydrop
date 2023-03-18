@@ -24,6 +24,7 @@ const Home = () => {
   const reqs = props[0];
   const drone = props[1];
   console.log('Home', { reqs });
+  const [lreqs, setLreqs] = useState(reqs);
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -82,10 +83,11 @@ const Home = () => {
           reqs={reqs}
           setReqs={props[2]}
           drone={drone?.data?.filter((dr) => dr.available)?.length}
+          setLreqs={setLreqs}
         />
       </Grid>
       <Grid item xs>
-        <Drones drone={drone} reqs={reqs} />
+        <Drones drone={drone} reqs={lreqs} setLreqs={setLreqs} />
         <Box sx={{ my: 4, display: 'flex', justifyContent: 'center' }}>
           <Button
             startIcon={<img src={add} alt="add" width={40} />}

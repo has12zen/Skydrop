@@ -12,8 +12,6 @@ import {
 
 import { getAuth, signOut } from 'firebase/auth';
 
-import db from '../db';
-
 const eraseCookie = (name) => {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
@@ -62,6 +60,8 @@ const Dashboard = ({ setUser, user }) => {
         eraseCookie('accessToken');
 
         setUser(null);
+
+        navigate('/');
       })
       .catch((error) => {
         alert('Failed to logout. Try again later!');

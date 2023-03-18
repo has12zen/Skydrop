@@ -19,9 +19,9 @@ const App = () => {
   useEffect(() => {
     console.log({ user });
 
-    if (user) {
-      navigate('/');
-    }
+    // if (user) {
+    //   navigate('/');
+    // }
   }, [user]);
 
   return <div className="App">{routing}</div>;

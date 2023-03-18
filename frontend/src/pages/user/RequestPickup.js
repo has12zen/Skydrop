@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import {
+  Button,
   Box,
   Grid,
   Dialog,
-  DialogTitle,
   IconButton,
   InputAdornment,
   TextField,
@@ -79,9 +79,9 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
         />
       </div>
       <div>
-        {places.map((place) => {
+        {places.map((place, index) => {
           return (
-            <div>
+            <div key={'place-result-' + index}>
               <div>{place.place_name}</div>
               <div>
                 {place.geometry.coordinates[0]} {place.geometry.coordinates[1]}
@@ -132,7 +132,7 @@ const RequestPickup = () => {
           <TextField label="Receiver Email" type="email" />
         </Grid>
 
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Grid item xs={12}>
           <div
             onClick={() => setOpenPickupDialog(true)}
             style={{
@@ -150,7 +150,9 @@ const RequestPickup = () => {
             open={openPickupDialog}
             onClose={() => setOpenPickupDialog(false)}
           />
+        </Grid>
 
+        <Grid item xs={12}>
           <div
             onClick={() => setOpenDestDialog(true)}
             style={{
@@ -163,12 +165,34 @@ const RequestPickup = () => {
           >
             Select Destination Location
           </div>
-          <SelectLocation
-            title="Select Destination Location"
-            open={openDestDialog}
-            onClose={() => setOpenDestDialog(false)}
-          />
-        </div>
+        </Grid>
+        <SelectLocation
+          title="Select Destination Location"
+          open={openDestDialog}
+          onClose={() => setOpenDestDialog(false)}
+        />
+
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          style={{ margin: '10px 0px 10px 0px' }}
+        >
+          <TextField label="Payload Weight" type="number" />
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Button variant="contained">PLACE ORDER</Button>
+        </Grid>
       </Grid>
     </Box>
   );

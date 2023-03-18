@@ -50,7 +50,31 @@ const DemoCard = ({ drone }) => {
             <div>{parseFloat(drone.longitude).toFixed(3)}</div>
           </div>
         </div>
-        <Typography variant="body2">This is drone info</Typography>
+
+        <div>
+          {drone.available ? (
+            <Typography
+              variant="body2"
+              style={{ color: 'lightgreen', fontWeight: 600 }}
+            >
+              Free
+            </Typography>
+          ) : drone.destinationType === 'pickup' ? (
+            <Typography
+              variant="body2"
+              style={{ color: 'blue', fontWeight: 600 }}
+            >
+              Going to pickup
+            </Typography>
+          ) : (
+            <Typography
+              variant="body2"
+              style={{ color: 'goldenrod', fontWeight: 600 }}
+            >
+              In delivery
+            </Typography>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

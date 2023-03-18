@@ -9,6 +9,7 @@ import {
   Logout,
   LocationOn,
 } from '@mui/icons-material';
+import {getAllOrders, getUsersRequests} from './queries';
 
 import { getAuth, signOut } from 'firebase/auth';
 
@@ -19,6 +20,7 @@ const eraseCookie = (name) => {
 const Dashboard = ({ setUser, user }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
+  // const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     const location = window.location.pathname.split('/')[1];
@@ -51,6 +53,15 @@ const Dashboard = ({ setUser, user }) => {
         setActive(0);
     }
   }, [navigate]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const resp = await getAllOrders();
+  //     console.log({resp})
+  //     setRequests(resp.data);
+  //   };
+  //   fetchData();
+  // }, [requests]);
 
   const auth = getAuth();
 

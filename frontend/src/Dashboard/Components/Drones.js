@@ -7,9 +7,21 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const Drones = () => {
+  const [drone, setDrone] = useState();
+  console.log({drone});
+  useEffect(() => {
+    const fetchData = async () => {
+      const resp = await axios.get('/api/drone');
+      console.log({resp});
+      setDrone(resp.data);
+    };
+    fetchData();
+  }, []);  
+  
   const tableRow = (a, b) => {
     return (
       <TableRow sx={{ width: '100%' }}>

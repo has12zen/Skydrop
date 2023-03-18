@@ -7,7 +7,7 @@ var serviceAccount = require("./serviceAccountKey.json");
 
 const app = require("./app");
 console.log("Starting app..");
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 // async function initializeApp() {
 //     try {

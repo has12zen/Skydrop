@@ -15,31 +15,32 @@ import {
   Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getAllOrders } from '../queries';
 import '../Styles/Requests.css';
 import data from './DummyData';
 
 const GetChip = (chipId) => {
   switch (chipId) {
-    case 0:
+    case "Pending":
       return (
         <Chip label="Pending" sx={{ color: 'black', fontWeight: '700' }} />
       );
-    case 1:
+    case "Active":
       return (
         <Chip
           label="Active"
           sx={{ backgroundColor: 'orange', color: 'white', fontWeight: '700' }}
         />
       );
-    case 2:
+    case "Completed":
       return (
         <Chip
           label="Completed"
           sx={{ backgroundColor: 'green', color: 'white', fontWeight: '700' }}
         />
       );
-    case 3:
+    case "Rejected":
       return (
         <Chip
           label="Rejected"
@@ -52,6 +53,18 @@ const GetChip = (chipId) => {
 };
 
 const Current = () => {
+  const [reqs, setReqs] = useState([]);
+  console.log("reqs", {reqs});
+  
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const resp = await getAllOrders();
+      const datas = resp.data;
+      setReqs(datas)
+    };
+    fetchOrders();
+  }, [])
+
   const [page, setPage] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
 
@@ -87,13 +100,8 @@ const Current = () => {
               {data.weight}
             </Typography>
           </TableCell>
-          <TableCell align="center">
-            <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
-              {data.size}
-            </Typography>
-          </TableCell>
           <TableCell align="center" sx={{ fontWeight: '600' }}>
-            {data.requestDate}
+            {Date(data.createdTime._seconds).toString().slice(0, 24)}
           </TableCell>
           <TableCell align="center">{GetChip(data.status)}</TableCell>
         </TableRow>
@@ -136,9 +144,6 @@ const Current = () => {
             <TableCell className="tableheader" align="center" sx={{ pl: 5 }}>
               Weight
             </TableCell>
-            <TableCell className="tableheader" align="center" sx={{ pl: 5 }}>
-              Size
-            </TableCell>
             <TableCell className="tableheader" align="center">
               Request Date
             </TableCell>
@@ -147,7 +152,7 @@ const Current = () => {
             </TableCell>
           </TableHead>
           <TableBody sx={{ overflow: 'scroll'}}>
-            {data
+            {(reqs.data? reqs.data: [])
               .slice(page * rowPerPage, page * rowPerPage + rowPerPage)
               .map((row) => {
                 return <Row key={row.userName} row={row} />;
@@ -157,7 +162,7 @@ const Current = () => {
         <TablePagination
           rowsPerPageOptions={[5, 6, 7]}
           component="div"
-          count={14}
+          count={reqs.data? reqs.data.length : 0}
           rowsPerPage={rowPerPage}
           page={page}
           onPageChange={(e, newpage) => setPage(newpage)}

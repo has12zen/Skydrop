@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   Typography,
   Box,
@@ -17,29 +18,30 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { ArrowDropDown, Send } from '@mui/icons-material';
 import '../Styles/Requests.css';
+import { getAllOrders } from '../queries';
 import data from './DummyData'
 
 const GetChip = (chipId) => {
   switch (chipId) {
-    case 0:
+    case "Pending":
       return (
         <Chip label="Pending" sx={{ color: 'black', fontWeight: '700' }} />
       );
-    case 1:
+    case "Active":
       return (
         <Chip
           label="Active"
           sx={{ backgroundColor: 'orange', color: 'white', fontWeight: '700' }}
         />
       );
-    case 2:
+    case "Completed":
       return (
         <Chip
           label="Completed"
           sx={{ backgroundColor: 'green', color: 'white', fontWeight: '700' }}
         />
       );
-    case 3:
+    case "Rejected":
       return (
         <Chip
           label="Rejected"
@@ -51,7 +53,19 @@ const GetChip = (chipId) => {
   }
 };
 
-const Requests = ({ setActive }) => {
+const Requests = () => {
+  const [reqs, setReqs] = useState([]);
+  console.log("reqs", {reqs});
+  
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const resp = await getAllOrders();
+      const datas = resp.data;
+      setReqs(datas)
+    };
+    fetchOrders();
+  }, [])
+  
   const Row = (props) => {
     const InnerRow = (label, value, border=true) => {
       return (
@@ -84,14 +98,14 @@ const Requests = ({ setActive }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src="https://picsum.photos/100" />
               <Typography variant="subtitle1" sx={{ ml: 4, fontWeight: '700' }}>
-                {row.userName}
+                {row.receiverName}
               </Typography>
             </Box>
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: '600' }}>
-            {row.requestDate}
+            {Date(row.createdTime._seconds).toString().slice(0, 24)}
           </TableCell>
-          <TableCell align="center">{GetChip(1)}</TableCell>
+          <TableCell align="center">{GetChip(row.status)}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell colSpan={4} sx={{ p: 0 }}>
@@ -101,9 +115,8 @@ const Requests = ({ setActive }) => {
               >
                 <tbody>
                   {InnerRow('Weight', row.weight)}
-                  {InnerRow('Size', row.size)}
-                  {InnerRow('Pick Up Location', plocation)}
-                  {InnerRow('Delivery Location', plocation, false)}
+                  {InnerRow('Pick Up Location', `(${row.pickup.latitude}, ${row.pickup.longitude})`)}
+                  {InnerRow('Delivery Location', `(${row.destination.latitude}, ${row.destination.longitude})`, false)}
                 </tbody>
               </Box>
             </Collapse>
@@ -133,7 +146,7 @@ const Requests = ({ setActive }) => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {(data.slice(0, 6)).map((row) => {
+            {(reqs.data?reqs.data.slice(0, 6):[]).map((row) => {
               return (
                 <Row
                   key={row.userName}

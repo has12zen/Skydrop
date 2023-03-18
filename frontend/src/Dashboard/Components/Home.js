@@ -15,7 +15,8 @@ import Requests from './Requests';
 import Drones from './Drones';
 import add from '../../assets/home/add.webp';
 
-const Home = ({ setActive }) => {
+const Home = () => {
+  
   const [open, setOpen] = useState(false);
 
   const handleCancel = () => {
@@ -51,7 +52,7 @@ const Home = ({ setActive }) => {
         </DialogActions>
       </Dialog>
       <Grid item xs={8} sx={{ mr: 4 }}>
-        <Requests setActive={setActive} />
+        <Requests />
       </Grid>
       <Grid item xs>
         <Drones />

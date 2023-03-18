@@ -8,7 +8,16 @@ exports.findByUserId = catchAsync(async (req, res, next) => {
   const reqRef = db.collection("requests");
   const query = reqRef.where("userId", "==", req.params.id);
   const reqs = await query.get();
-  const data = reqs.docs.map((doc) => doc.data());
+  const data = reqs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  res.send(data);
+});
+
+exports.getUserRequests = catchAsync(async (req, res, next) => {
+  const reqRef = db.collection("requests");
+  const query = reqRef.where("userId", "==", req.user.id);
+  const reqs = await query.get();
+  const data = reqs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
   res.send(data);
 });
@@ -73,4 +82,17 @@ exports.getAll = catchAsync(async (req, res, next) => {
       data,
     },
   });
+});
+
+exports.getActiveRequests = catchAsync(async (req, res, next) => {
+  const docRef = db.collection("requests");
+  const reqs = await docRef
+    .where("userId", "==", req.user.id)
+    .where("status", "==", "Pending")
+    .get();
+  const data = reqs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  console.log(data);
+
+  res.send(data);
 });

@@ -1,21 +1,161 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Avatar, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Avatar,
+  CircularProgress,
+  TableRow,
+  TableCell,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  IconButton,
+} from '@mui/material';
+
+import {
+  CheckRounded,
+  CloseRounded,
+  KeyboardArrowDownRounded,
+  KeyboardArrowUpRounded,
+} from '@mui/icons-material';
+
 import axios from 'axios';
 // import Requests from './Requests';
 // import Drones from './Drones';
+
+const HistoryElement = ({ data }) => {
+  console.log({ data });
+
+  const [open, setOpen] = useState(false);
+
+  const rowStyle = [
+    {
+      backgroundColor: '#f2f2f2',
+    },
+    {
+      backgroundColor: '#ffffff',
+    },
+  ];
+
+  return (
+    <>
+      <TableRow key={data.id} style={rowStyle[1]}>
+        <TableCell>{data.receiverName}</TableCell>
+        <TableCell>{data.id}</TableCell>
+        <TableCell>{data.weight}</TableCell>
+        {/* <TableCell>{data.size}</TableCell> */}
+        <TableCell>{data.status}</TableCell>
+        {/* <TableCell>
+          <IconButton style={{ color: 'green' }}>
+            <CheckRounded />
+          </IconButton>
+          <IconButton style={{ color: 'red' }}>
+            <CloseRounded />
+          </IconButton>
+        </TableCell> */}
+        <TableCell>
+          <IconButton
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            {open ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      {open && (
+        <>
+          <TableRow style={rowStyle[0]}>
+            <TableCell>Pickup Location:</TableCell>
+            <TableCell>Latitude {data.pickup.latitude}</TableCell>
+            <TableCell>Longitude {data.pickup.longitude}</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+          <TableRow style={rowStyle[0]}>
+            <TableCell>Destination</TableCell>
+            <TableCell>Latitude {data.destination.latitude}</TableCell>
+            <TableCell>Longitude {data.destination.longitude}</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </>
+      )}
+    </>
+  );
+};
+
+const ActiveHistory = () => {
+  const [history, setHistory] = useState(null);
+
+  const textStyle = {
+    fontFamily: 'TipografiaRamis',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#333',
+  };
+
+  const fetchHistory = () => {
+    axios
+      .get('/api/requests/active')
+      .then((res) => {
+        setHistory(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  return (
+    <Box>
+      <Container sx={{ my: 3 }}>
+        {!history ? (
+          <div>
+            <CircularProgress />
+          </div>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableHead style={textStyle}>
+                <TableCell>USER</TableCell>
+                <TableCell>PACKAGE ID</TableCell>
+                <TableCell>WEIGHT</TableCell>
+                {/* <TableCell>SIZE</TableCell> */}
+                <TableCell>STATUS</TableCell>
+                {/* <TableCell>APPROVE</TableCell> */}
+                <TableCell></TableCell>
+              </TableHead>
+              <TableBody>
+                {history.map((data, index) => (
+                  <HistoryElement data={data} key={'data-history-' + index} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Container>
+    </Box>
+  );
+};
 
 const Home = ({ user }) => {
   const [activePickups, setActivePickups] = useState(null);
 
   useEffect(() => {
-    console.log({ user });
+    fetchActivePickups();
   }, []);
 
   const fetchActivePickups = () => {
     axios
-      .get('/api/requests')
+      .get('/api/requests/active')
       .then((res) => {
-        console.log(res.data);
+        setActivePickups(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -47,7 +187,7 @@ const Home = ({ user }) => {
             <CircularProgress />
           </div>
         ) : (
-          <div></div>
+          <ActiveHistory />
         )}
       </Box>
     </Box>

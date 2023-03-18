@@ -106,4 +106,16 @@ const data = [
   },
 ];
 
-export default data;
+const notifData = [
+  {
+    data: 'Package-1 reached destination'
+  },
+  {
+    data: 'Package-2 reached destination'
+  }
+];
+
+export {
+  data,
+  notifData
+}

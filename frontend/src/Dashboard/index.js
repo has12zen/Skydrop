@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { 
+  Box, 
+  Grid, 
+  Typography,
+  Card,
+  CardContent,
+  Menu,
+  Button,
+  MenuItem,
+  Badge
+} from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Outlet, useNavigate } from 'react-router-dom';
 import './Styles/Dashboard.css';
 import {
@@ -10,7 +21,7 @@ import {
   LocationOn,
 } from '@mui/icons-material';
 import { getAllOrders, getUsersRequests } from './Helper/queries';
-
+import {notifData} from './Components/DummyData';
 import { getAuth, signOut } from 'firebase/auth';
 
 const eraseCookie = (name) => {
@@ -21,7 +32,17 @@ const Dashboard = ({ setUser, user }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [requests, setRequests] = useState([]);
+  const [notifs, setNotifs] = useState(notifData);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   console.log('index', { requests });
+  console.log(notifs);
 
   useEffect(() => {
     const location = window.location.pathname.split('/')[1];
@@ -82,7 +103,7 @@ const Dashboard = ({ setUser, user }) => {
       });
   };
 
-  const MenuItem = (name, route = '/', icon, idx, onClickHandler = null) => {
+  const MenuItem1 = (name, route = '/', icon, idx, onClickHandler = null) => {
     return (
       <Box
         className={`menuItem ${idx === active ? 'activeMenu' : ''}`}
@@ -99,6 +120,58 @@ const Dashboard = ({ setUser, user }) => {
       </Box>
     );
   };
+  
+  function NotificationsButton() {
+    return (
+      <div>
+      <Button
+        id="demo-positioned-button"
+        aria-controls={open ? 'demo-positioned-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <NotificationsIcon/>
+      </Button>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+
+        sx={{
+          position: 'absolute',
+          top: '35%',
+          left: '105%',
+          transform: 'translate(-50%, -50%)',
+          // backgroundColor: 'white',
+          width: '50%',
+          height: '50%',
+          textAlign: 'right',
+          padding: 2,
+          opacity: '1',
+          display: "flex"
+        }}
+      >
+
+        {
+        notifs.map((notif) => {
+          return <MenuItem onClick={handleClose}>{notif.data}</MenuItem>;
+        })
+        }
+      </Menu>
+    </div>
+    );
+  }
 
   return (
     <Box sx={{ height: '100vh', backgroundColor: '#4599e6' }}>
@@ -110,20 +183,20 @@ const Dashboard = ({ setUser, user }) => {
           <Box className="menuItemCont">
             {user?.admin ? (
               <>
-                {MenuItem('Home', '/', <Home />, 0)}
-                {MenuItem('Current Requests', 'currents', <HourglassTop />, 1)}
-                {MenuItem('Package History', 'history', <History />, 2)}
-                {MenuItem('Master Map', 'map', <LocationOn />, 3)}
-                {MenuItem('Logout', '', <Logout />, 4, () => {
+                {MenuItem1('Home', '/', <Home />, 0)}
+                {MenuItem1('Current Requests', 'currents', <HourglassTop />, 1)}
+                {MenuItem1('Package History', 'history', <History />, 2)}
+                {MenuItem1('Master Map', 'map', <LocationOn />, 3)}
+                {MenuItem1('Logout', '', <Logout />, 4, () => {
                   logout();
                 })}
               </>
             ) : (
               <>
-                {MenuItem('Home', '/', <Home />, 0)}
-                {MenuItem('Request Pickup', 'new-pickup', <HourglassTop />, 1)}
-                {MenuItem('Order History', 'order-history', <History />, 2)}
-                {MenuItem('Logout', '', <Logout />, 3, () => {
+                {MenuItem1('Home', '/', <Home />, 0)}
+                {MenuItem1('Request Pickup', 'new-pickup', <HourglassTop />, 1)}
+                {MenuItem1('Order History', 'order-history', <History />, 2)}
+                {MenuItem1('Logout', '', <Logout />, 3, () => {
                   logout();
                 })}
               </>
@@ -140,6 +213,24 @@ const Dashboard = ({ setUser, user }) => {
             sx={{ overflow: 'auto', height: '100%' }}
           >
             <Outlet context={requests.data} />
+          </Box>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '30%',
+              left: '118%',
+              transform: 'translate(-50%, -50%)',
+              // backgroundColor: 'white',
+              width: '50%',
+              height: '50%',
+              textAlign: 'right',
+              padding: 2,
+              opacity: '1',
+              display: "flex"
+            }}
+          >
+            {/* <NotificationsIcon/> */}
+            <NotificationsButton/>
           </Box>
         </Grid>
       </Grid>

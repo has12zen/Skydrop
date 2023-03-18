@@ -68,8 +68,6 @@ const Requests = ({reqs}) => {
     const row = props.row;
     
     const [open, setOpen] = useState(false);
-    const plocation =
-      '23 Street, 2nd Cross, 3rd Main, 4th Block, 5th Ward, 6th Town, 7th City, 8th State, 9th Country';
     return (
       <React.Fragment>
         <TableRow>
@@ -134,7 +132,7 @@ const Requests = ({reqs}) => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {(reqs.data?reqs.data.slice(0, 6):[]).map((row) => {
+            {(reqs?reqs.filter((req) => req.status==="Pending").slice(0, 6):[]).map((row) => {
               return (
                 <Row
                   key={row.userName}

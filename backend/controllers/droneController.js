@@ -34,7 +34,7 @@ exports.getAllInfo = catchAsync(async (req, res, next) => {
   const droneRef = db.collection("drones");
   const drones = await droneRef.get();
   const data = drones.docs.map((doc) => doc.data());
-  console.log({ data });
+  console.log("Fetched drones");
 
   res.status(200).json({
     status: "Success",

@@ -20,7 +20,8 @@ const eraseCookie = (name) => {
 const Dashboard = ({ setUser, user }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-  // const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState([]);
+  console.log("index", {requests})
 
   useEffect(() => {
     const location = window.location.pathname.split('/')[1];
@@ -54,14 +55,16 @@ const Dashboard = ({ setUser, user }) => {
     }
   }, [navigate]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const resp = await getAllOrders();
-  //     console.log({resp})
-  //     setRequests(resp.data);
-  //   };
-  //   fetchData();
-  // }, [requests]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const resp = await getAllOrders();
+      console.log({resp})
+      setRequests(resp.data);
+    };
+    if(user?.admin){
+      fetchData();
+    }
+  }, [user?.admin]);
 
   const auth = getAuth();
 
@@ -136,7 +139,7 @@ const Dashboard = ({ setUser, user }) => {
             className="dashContent"
             sx={{ overflow: 'auto', height: '100%' }}
           >
-            <Outlet />
+            <Outlet context={requests.data} />
           </Box>
         </Grid>
       </Grid>

@@ -74,7 +74,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
   const docRef = db.collection("requests");
   const reqs = await docRef.get();
   const data = reqs.docs.map((doc) => doc.data());
-  console.log(data);
+  console.log("Got all data");
 
   res.status(200).json({
     status: "Success",
@@ -92,7 +92,7 @@ exports.getActiveRequests = catchAsync(async (req, res, next) => {
     .get();
   const data = reqs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-  console.log(data);
+  console.log("Got active requests");
 
   res.send(data);
 });

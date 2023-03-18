@@ -1,61 +1,115 @@
-import { Button, Container, Table, TableCell, TableContainer, TableHead, Typography } from '@mui/material';
-import React from 'react';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from '@mui/icons-material';
+
+const HistoryElement = ({ data }) => {
+  console.log({ data });
+
+  const [open, setOpen] = useState(false);
+
+  const rowStyle = [
+    {
+      backgroundColor: '#f2f2f2',
+    },
+    {
+      backgroundColor: '#ffffff',
+    },
+  ];
+
+  return (
+    <>
+      <TableRow key={data.id} style={rowStyle[1]}>
+        <TableCell>{data.receiverName}</TableCell>
+        <TableCell>{data.id}</TableCell>
+        <TableCell>{data.weight}</TableCell>
+        {/* <TableCell>{data.size}</TableCell> */}
+        <TableCell>{data.status}</TableCell>
+        {/* <TableCell>
+          <IconButton style={{ color: 'green' }}>
+            <CheckRounded />
+          </IconButton>
+          <IconButton style={{ color: 'red' }}>
+            <CloseRounded />
+          </IconButton>
+        </TableCell> */}
+        <TableCell>
+          <IconButton
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            {open ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      {open && (
+        <>
+          <TableRow style={rowStyle[0]}>
+            <TableCell>Pickup Location:</TableCell>
+            <TableCell>Latitude {data.pickup.latitude}</TableCell>
+            <TableCell>Longitude {data.pickup.longitude}</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+          <TableRow style={rowStyle[0]}>
+            <TableCell>Destination</TableCell>
+            <TableCell>Latitude {data.destination.latitude}</TableCell>
+            <TableCell>Longitude {data.destination.longitude}</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </>
+      )}
+    </>
+  );
+};
 
 const History = () => {
-  // axios.patch('http://localhost:3002/api/requests/IUI5rbFSjB2RiOgYjQ6O', {
-  //   status: "completed",
-  // }).then((res) => {
-  //   console.log(res);
-  // }).catch((err) => {
-  //   console.log(err);
-  // });
-
-  // axios.get('http://localhost:3002/api/requests').then((resp) => {
-  //   console.log(resp);
-  // }).catch((err) => {
-  //   console.log(err);
-  // })
-
-  const onClickHandler = () => {
-    // axios.post("http://localhost:3002/api/drones/add").then((res) => {
-    //   console.log({res});
-    // }).catch((err) => {
-    //   console.log({err});
-    // })
-    // axios.get("http://localhost:3002/api/drones").then((res) => {
-    //   console.log({res});
-    // }).catch((err) => {
-    //   console.log({err});
-    // })
-
-    // axios.patch("http://localhost:3002/api/drones/CXNBGM09iNVXVtQWDvjb", {
-    //   latitude: 70,
-    //   longitude: -30,
-    //   available: false
-    // }).then((res) => {
-    //   console.log({res});
-    // }).catch((err) => {
-    //   console.log({err});
-    // })
-  };
-
-  
+  const [history, setHistory] = useState([]);
   return (
-    <Container sx={{my: 3}}>
-      <Typography variant="h4">Package History</Typography>
-      <Button onClick={onClickHandler}>make req</Button>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableCell>Package ID</TableCell>
-            <TableCell>User</TableCell>
-            <TableCell>Weight</TableCell>
-            <TableCell>Package ID</TableCell>
-          </TableHead>
-        </Table>
-      </TableContainer>
-    </Container>
+    <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
+      <Typography variant="h4">Order History</Typography>
+      <Container sx={{ my: 3 }}>
+        {!history ? (
+          <div>
+            <CircularProgress />
+          </div>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableHead >
+                <TableCell>USER</TableCell>
+                <TableCell>PACKAGE ID</TableCell>
+                <TableCell>WEIGHT</TableCell>
+                {/* <TableCell>SIZE</TableCell> */}
+                <TableCell>STATUS</TableCell>
+                {/* <TableCell>APPROVE</TableCell> */}
+                <TableCell></TableCell>
+              </TableHead>
+              <TableBody>
+                {history.map((data, index) => (
+                  <HistoryElement data={data} key={'data-history-' + index} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Container>
+    </Box>
   );
 };
 

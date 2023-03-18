@@ -38,8 +38,8 @@ const Drones = ({drone, reqs}) => {
           {tableRow('Total Drones', drone?.data?.length)}
           {tableRow('Active Drones', drone?.data?.filter((dr) => dr.working)?.length)}
           {tableRow('Available Drones', drone?.data?.filter((dr) => dr.available)?.length)}
-          {tableRow('Total Requests', reqs?.data?.length)}
-          {tableRow('Pending Requests', reqs?.data?.filter((req) => req.status==="Pending")?.length)}
+          {tableRow('Total Requests', reqs?.length)}
+          {tableRow('Pending Requests', reqs?.filter((req) => req.status==="Pending")?.length)}
         </Table>
       </Paper>
     </Box>

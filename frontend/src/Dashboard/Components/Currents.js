@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { getAllOrders } from '../queries';
 import '../Styles/Requests.css';
 import data from './DummyData';
@@ -53,17 +54,7 @@ const GetChip = (chipId) => {
 };
 
 const Current = () => {
-  const [reqs, setReqs] = useState([]);
-  console.log("reqs", {reqs});
-  
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const resp = await getAllOrders();
-      const datas = resp.data;
-      setReqs(datas)
-    };
-    fetchOrders();
-  }, [])
+  const reqs = useOutletContext();
 
   const [page, setPage] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
@@ -152,7 +143,7 @@ const Current = () => {
             </TableCell>
           </TableHead>
           <TableBody sx={{ overflow: 'scroll'}}>
-            {(reqs.data? reqs.data: [])
+            {(reqs? reqs.filter((req) => req.status==="Pending"): [])
               .slice(page * rowPerPage, page * rowPerPage + rowPerPage)
               .map((row) => {
                 return <Row key={row.userName} row={row} />;
@@ -162,7 +153,7 @@ const Current = () => {
         <TablePagination
           rowsPerPageOptions={[5, 6, 7]}
           component="div"
-          count={reqs.data? reqs.data?.length : 0}
+          count={reqs? reqs?.length : 0}
           rowsPerPage={rowPerPage}
           page={page}
           onPageChange={(e, newpage) => setPage(newpage)}

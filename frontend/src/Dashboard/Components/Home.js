@@ -15,6 +15,7 @@ import Requests from './Requests';
 import Drones from './Drones';
 import add from '../../assets/home/add.webp';
 import { getAllOrders } from '../queries';
+import { useOutletContext } from 'react-router-dom';
 
 const Home = () => {
   const [drone, setDrone] = useState();
@@ -29,17 +30,8 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const [reqs, setReqs] = useState([]);
-  console.log('reqs', { reqs });
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const resp = await getAllOrders();
-      const datas = resp.data;
-      setReqs(datas);
-    };
-    fetchOrders();
-  }, []);
+  const reqs = useOutletContext();
+  console.log("Home", {reqs});
 
   const [open, setOpen] = useState(false);
 

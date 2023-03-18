@@ -1,9 +1,14 @@
-import { ArrowDropDown } from '@mui/icons-material';
+import { ArrowDropDown, ArrowRightAlt } from '@mui/icons-material';
 import {
   Avatar,
+  Backdrop,
   Chip,
+  CircularProgress,
   Collapse,
   Container,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Paper,
   Table,
   TableBody,
@@ -21,13 +26,49 @@ import { getAllOrders } from '../Helper/queries';
 import { GetChip } from '../Helper/helper';
 import '../Styles/Requests.css';
 import data from './DummyData';
+import axios from 'axios';
 
 const Current = () => {
+  const [dopen, setDopen] = useState('');
   const props = useOutletContext();
-  const reqs = props[0];
+  // const reqs = props[0];
+  const [lreqs, setLreqs] = useState([]);
+  console.log({lreqs})
+  
+  useEffect(() => {
+    console.log("hello", {p: props[0]})
+    setLreqs(props[0]);
+  }, [props])
 
   const [page, setPage] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
+  const [loading, setLoading] = useState(false);
+
+  const handleClose = () => {
+    setDopen('');
+  };
+
+  const handleOpen = (id) => {
+    setDopen(id);
+  };
+
+  const handleStatusChange = async (status) => {
+    setDopen('');
+    setLoading(true);
+    const resp = await axios.patch(`/api/requests/${dopen}`, {
+      status,
+    });
+    console.log('Status', { resp });
+    const temp = lreqs;
+    temp.forEach((req) => {
+      if (req.id === dopen) {
+        req.status = status;
+      }
+    });
+    props[2](temp);
+    setLreqs(temp);
+    setLoading(false);
+  };
 
   const Row = (props) => {
     const data = props.row;
@@ -46,7 +87,6 @@ const Current = () => {
           </TableCell>
           <TableCell align="left">
             <Box>
-              <Avatar src="https://picsum.photos/100" />
               <Typography variant="subtitle1" sx={{ ml: 4, fontWeight: '700' }}>
                 {data.receiverName}
               </Typography>
@@ -60,7 +100,15 @@ const Current = () => {
           <TableCell align="center" sx={{ fontWeight: '600' }}>
             {Date(data.createdTime._seconds).toString().slice(0, 15)}
           </TableCell>
-          <TableCell align="center">{GetChip(data.status)}</TableCell>
+          <TableCell align="center">
+            <Box
+              onClick={() =>
+                data.status === 'Pending' ? handleOpen(data.id) : null
+              }
+            >
+              {GetChip(data.status)}
+            </Box>
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell colSpan={6} sx={{ p: 0 }}>
@@ -90,6 +138,60 @@ const Current = () => {
 
   return (
     <Container sx={{ py: 3 }}>
+      <Backdrop open={loading} sx={{ color: '#fff', zIndex: 1000 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Dialog open={dopen.length !== 0} onClose={handleClose}>
+        <DialogTitle sx={{ px: 4 }}>
+          <Typography textAlign={'center'} sx={{ fontWeight: '700' }}>
+            Accept the Request
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Container
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              py: 2,
+            }}
+          >
+            <Box
+              onClick={() => handleStatusChange('Rejected')}
+              sx={{
+                filter: 'drop-shadow(0px 0px 5px rgb(0,0,0,0.5))',
+                transform: 'scale(1.1)',
+              }}
+            >
+              {GetChip('Rejected')}
+            </Box>
+            <ArrowRightAlt sx={{ mx: 2, transform: 'rotate(180deg)' }} />
+            {GetChip('Pending')}
+            <ArrowRightAlt sx={{ mx: 2 }} />
+            <Box
+              onClick={() => (true ? handleStatusChange('Accepted') : null)}
+              sx={{
+                filter: 'drop-shadow(0px 0px 5px rgb(0,0,0,0.5))',
+                transform: 'scale(1.1)',
+              }}
+            >
+              {GetChip('Accepted')}
+            </Box>
+          </Container>
+          {false && (
+            <Container sx={{ mt: 3 }}>
+              <Typography
+                textAlign={'center'}
+                sx={{ fontWeight: '800' }}
+                variant="h6"
+                color={'error'}
+              >
+                No Drones Available !!
+              </Typography>
+            </Container>
+          )}
+        </DialogContent>
+      </Dialog>
       <Typography variant="h4">Drone Requests</Typography>
       <TableContainer component={Paper} sx={{ my: 3 }}>
         <Table>
@@ -109,9 +211,9 @@ const Current = () => {
             </TableCell>
           </TableHead>
           <TableBody sx={{ overflow: 'scroll' }}>
-            {(reqs
-              ? reqs.filter((req) =>
-                  ['Pending', 'Accepted', 'Active'].includes(req.status)
+            {(lreqs
+              ? lreqs.filter(
+                  (req) => ['Pending', 'Accepted', 'Active'].includes(req.status)
                 )
               : []
             )
@@ -124,7 +226,7 @@ const Current = () => {
         <TablePagination
           rowsPerPageOptions={[5, 6, 7]}
           component="div"
-          count={reqs ? reqs?.length : 0}
+          count={lreqs ? lreqs?.filter((req) => ['Pending', 'Accepted', 'Active'].includes(req.status)).length : 0}
           rowsPerPage={rowPerPage}
           page={page}
           onPageChange={(e, newpage) => setPage(newpage)}

@@ -36,7 +36,6 @@ const Home = () => {
     setOpen(false);
     setLoading(true);
     const resp = await axios.post('/api/drones/add');
-    console.log({ resp });
     drone.data.push(resp.data.data);
     setLoading(false);
   };

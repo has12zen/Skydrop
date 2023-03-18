@@ -38,7 +38,6 @@ const Dashboard = ({ setUser, user }) => {
   const [drone, setDrone] = useState();
 
   const handleRequestChange = (newReq) => {
-    console.log("change", newReq);
     setRequests(newReq);
   };
   
@@ -49,14 +48,13 @@ const Dashboard = ({ setUser, user }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log('index', { requests });
+  console.log('Index', { requests });
   console.log(notifs);
   
   console.log("Index", { drone });
   useEffect(() => {
     const fetchData = async () => {
       const resp = await axios.get('/api/drones');
-      console.log("Index Resp", { resp });
       const data = resp.data.data;
       setDrone(data);
     };
@@ -98,7 +96,6 @@ const Dashboard = ({ setUser, user }) => {
   useEffect(() => {
     const fetchData = async () => {
       const resp = await getAllOrders();
-      console.log("Index Resp",{ resp });
       setRequests(resp);
     };
     if (user?.admin) {

@@ -13,7 +13,7 @@ const DemoCard = ({ drone }) => {
   const { myMapA } = useMap();
   return (
     <Card
-      sx={{ maxWidth: 275 }}
+      sx={{ width: '200px', marginBottom: '10px' }}
       onClick={() => {
         myMapA.flyTo({ center: [drone.longitude, drone.latitude] });
       }}
@@ -23,7 +23,8 @@ const DemoCard = ({ drone }) => {
           {drone.color}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          latitude:{drone.latitude}\n longitude:{drone.longitude}
+          latitude:{drone.latitude}
+          <br /> longitude:{drone.longitude}
         </Typography>
         <Typography variant="body2">This is drone info</Typography>
       </CardContent>
@@ -71,7 +72,10 @@ function MasterMap() {
             properties: {},
             geometry: {
               type: 'LineString',
-              coordinates: [[req.pickup.longitude, req.pickup.latitude], [req.destination.longitude, req.destination.latitude]],
+              coordinates: [
+                [req.pickup.longitude, req.pickup.latitude],
+                [req.destination.longitude, req.destination.latitude],
+              ],
             },
           });
           pickUps.push(req.pickup);
@@ -83,7 +87,7 @@ function MasterMap() {
         setWarehouses(pickUps);
         dataOne.features = new_fatures;
         setJsonData(dataOne);
-        console.log('dataOne', dataOne)
+        console.log('dataOne', dataOne);
       })
       .catch((err) => {
         console.log(err);
@@ -122,10 +126,11 @@ function MasterMap() {
           <div
             style={{
               overflow: 'auto',
+              width: '200px',
             }}
           >
             {drones.map((drone, index) => (
-              <div key={index} item xs={12}>
+              <div key={index}>
                 <DemoCard drone={drone} />
               </div>
             ))}

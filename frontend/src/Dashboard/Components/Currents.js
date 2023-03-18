@@ -92,8 +92,8 @@ const Current = () => {
   };
 
   return (
-    <Container sx={{py: 3}}>
-      <Typography variant="h4" sx={{my: 2}}>Drone Requests</Typography>
+    <Container sx={{ py: 3 }}>
+      <Typography variant="h4">Drone Requests</Typography>
       <TableContainer component={Paper} sx={{ my: 3 }}>
         <Table>
           <TableHead>
@@ -111,8 +111,8 @@ const Current = () => {
               Status
             </TableCell>
           </TableHead>
-          <TableBody sx={{ overflow: 'scroll'}}>
-            {(reqs? reqs.filter((req) => req.status==="Pending"): [])
+          <TableBody sx={{ overflow: 'scroll' }}>
+            {(reqs ? reqs.filter((req) => req.status === 'Pending') : [])
               .slice(page * rowPerPage, page * rowPerPage + rowPerPage)
               .map((row) => {
                 return <Row key={row.userName} row={row} />;
@@ -122,7 +122,7 @@ const Current = () => {
         <TablePagination
           rowsPerPageOptions={[5, 6, 7]}
           component="div"
-          count={reqs? reqs?.length : 0}
+          count={reqs ? reqs?.length : 0}
           rowsPerPage={rowPerPage}
           page={page}
           onPageChange={(e, newpage) => setPage(newpage)}

@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  Chip,
   CircularProgress,
   Container,
   IconButton,
@@ -15,7 +16,10 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
-import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from '@mui/icons-material';
+import {
+  KeyboardArrowDownRounded,
+  KeyboardArrowUpRounded,
+} from '@mui/icons-material';
 import { useOutletContext } from 'react-router-dom';
 import { GetChip } from '../Helper/helper';
 
@@ -36,9 +40,9 @@ const HistoryElement = ({ data }) => {
   return (
     <>
       <TableRow key={data.id} style={rowStyle[1]}>
-        <TableCell sx={{display: "flex", alignItems: "center"}}>
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar src="https://picsum.photos/100" />
-          <Typography sx={{ml: 2}}>{data.receiverName}</Typography>
+          <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
         </TableCell>
         <TableCell>{data.userId}</TableCell>
         <TableCell>{data.weight}</TableCell>
@@ -86,20 +90,26 @@ const HistoryElement = ({ data }) => {
 
 const History = () => {
   const reqs = useOutletContext();
-  const history = reqs?.filter((req) => req.status !== "Pending")
+  const history = reqs?.filter((req) => req.status !== 'Pending');
   return (
     <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
       <Typography variant="h4">Order History</Typography>
       <Container sx={{ my: 3 }}>
         {!history ? (
-          <div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <CircularProgress />
           </div>
-        ) : (
+        ) : history.length > 0 ? (
           <TableContainer>
             <Table>
-              <TableHead >
-                <TableCell align='center'>USER</TableCell>
+              <TableHead>
+                <TableCell align="center">USER</TableCell>
                 <TableCell>PACKAGE ID</TableCell>
                 <TableCell>WEIGHT (KG)</TableCell>
                 {/* <TableCell>SIZE</TableCell> */}
@@ -114,6 +124,17 @@ const History = () => {
               </TableBody>
             </Table>
           </TableContainer>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100px',
+            }}
+          >
+            <Chip label="Nothing to show here" style={{ fontSize: '18px' }} />
+          </div>
         )}
       </Container>
     </Box>

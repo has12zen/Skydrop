@@ -1,5 +1,4 @@
-#mapCont{
-    width: 100%;
-
+#mapCont {
+  width: 100%;
+  flex: 1;
 }
-  

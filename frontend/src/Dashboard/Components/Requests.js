@@ -127,7 +127,7 @@ const Requests = ({ reqs }) => {
             variant="text"
             endIcon={<Send />}
             sx={{ color: 'black' }}
-            onClick={() => navigate('currents')}
+            onClick={() => navigate('/currents')}
           >
             Show all
           </Button>

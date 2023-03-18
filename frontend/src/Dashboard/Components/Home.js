@@ -14,7 +14,7 @@ import axios from 'axios';
 import Requests from './Requests';
 import Drones from './Drones';
 import add from '../../assets/home/add.webp';
-import { getAllOrders } from '../queries';
+import { getAllOrders } from '../Helper/queries';
 import { useOutletContext } from 'react-router-dom';
 
 const Home = () => {
@@ -31,7 +31,7 @@ const Home = () => {
   }, []);
 
   const reqs = useOutletContext();
-  console.log("Home", {reqs});
+  console.log('Home', { reqs });
 
   const [open, setOpen] = useState(false);
 

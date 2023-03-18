@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -15,6 +16,8 @@ import {
 import React, { useState } from 'react';
 import axios from 'axios';
 import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from '@mui/icons-material';
+import { useOutletContext } from 'react-router-dom';
+import { GetChip } from '../Helper/helper';
 
 const HistoryElement = ({ data }) => {
   console.log({ data });
@@ -33,11 +36,14 @@ const HistoryElement = ({ data }) => {
   return (
     <>
       <TableRow key={data.id} style={rowStyle[1]}>
-        <TableCell>{data.receiverName}</TableCell>
-        <TableCell>{data.id}</TableCell>
+        <TableCell sx={{display: "flex", alignItems: "center"}}>
+          <Avatar src="https://picsum.photos/100" />
+          <Typography sx={{ml: 2}}>{data.receiverName}</Typography>
+        </TableCell>
+        <TableCell>{data.userId}</TableCell>
         <TableCell>{data.weight}</TableCell>
         {/* <TableCell>{data.size}</TableCell> */}
-        <TableCell>{data.status}</TableCell>
+        <TableCell>{GetChip(data.status)}</TableCell>
         {/* <TableCell>
           <IconButton style={{ color: 'green' }}>
             <CheckRounded />
@@ -79,7 +85,8 @@ const HistoryElement = ({ data }) => {
 };
 
 const History = () => {
-  const [history, setHistory] = useState([]);
+  const reqs = useOutletContext();
+  const history = reqs?.filter((req) => req.status !== "Pending")
   return (
     <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
       <Typography variant="h4">Order History</Typography>
@@ -92,9 +99,9 @@ const History = () => {
           <TableContainer>
             <Table>
               <TableHead >
-                <TableCell>USER</TableCell>
+                <TableCell align='center'>USER</TableCell>
                 <TableCell>PACKAGE ID</TableCell>
-                <TableCell>WEIGHT</TableCell>
+                <TableCell>WEIGHT (KG)</TableCell>
                 {/* <TableCell>SIZE</TableCell> */}
                 <TableCell>STATUS</TableCell>
                 {/* <TableCell>APPROVE</TableCell> */}

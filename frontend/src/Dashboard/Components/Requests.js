@@ -18,55 +18,30 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { ArrowDropDown, Send } from '@mui/icons-material';
 import '../Styles/Requests.css';
-import { getAllOrders } from '../queries';
-import data from './DummyData'
+import { getAllOrders } from '../Helper/queries';
+import { GetChip } from '../Helper/helper';
+import data from './DummyData';
 
-const GetChip = (chipId) => {
-  switch (chipId) {
-    case "Pending":
-      return (
-        <Chip label="Pending" sx={{ color: 'black', fontWeight: '700' }} />
-      );
-    case "Active":
-      return (
-        <Chip
-          label="Active"
-          sx={{ backgroundColor: 'orange', color: 'white', fontWeight: '700' }}
-        />
-      );
-    case "Completed":
-      return (
-        <Chip
-          label="Completed"
-          sx={{ backgroundColor: 'green', color: 'white', fontWeight: '700' }}
-        />
-      );
-    case "Rejected":
-      return (
-        <Chip
-          label="Rejected"
-          sx={{ backgroundColor: 'red', color: 'white', fontWeight: '700' }}
-        />
-      );
-    default:
-      return;
-  }
-};
-
-const Requests = ({reqs}) => {
+const Requests = ({ reqs }) => {
   const Row = (props) => {
-    const InnerRow = (label, value, border=true) => {
+    const InnerRow = (label, value, border = true) => {
       return (
-        <tr style={{borderBottom: `${border?"1px solid rgb(100,100,100)":"0px solid"}`}}>
+        <tr
+          style={{
+            borderBottom: `${
+              border ? '1px solid rgb(100,100,100)' : '0px solid'
+            }`,
+          }}
+        >
           <td style={{ fontWeight: '700' }}>{label}</td>
           <td>:&nbsp;</td>
           <td>{value}</td>
         </tr>
       );
     };
-    
+
     const row = props.row;
-    
+
     const [open, setOpen] = useState(false);
     return (
       <React.Fragment>
@@ -100,9 +75,16 @@ const Requests = ({reqs}) => {
                 sx={{ px: 4, py: 2, display: 'flex', justifyContent: 'center' }}
               >
                 <tbody>
-                  {InnerRow('Weight', row.weight)}
-                  {InnerRow('Pick Up Location', `(${row.pickup.latitude}, ${row.pickup.longitude})`)}
-                  {InnerRow('Delivery Location', `(${row.destination.latitude}, ${row.destination.longitude})`, false)}
+                  {InnerRow('Weight', `${row.weight} KG`)}
+                  {InnerRow(
+                    'Pick Up Location',
+                    `(${row.pickup.latitude}, ${row.pickup.longitude})`
+                  )}
+                  {InnerRow(
+                    'Delivery Location',
+                    `(${row.destination.latitude}, ${row.destination.longitude})`,
+                    false
+                  )}
                 </tbody>
               </Box>
             </Collapse>
@@ -115,7 +97,7 @@ const Requests = ({reqs}) => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{py: 3}}>
+    <Box sx={{ py: 3 }}>
       <Typography variant="h5">Requests</Typography>
       <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table>
@@ -132,13 +114,11 @@ const Requests = ({reqs}) => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {(reqs?reqs.filter((req) => req.status==="Pending").slice(0, 6):[]).map((row) => {
-              return (
-                <Row
-                  key={row.userName}
-                  row={row}
-                />
-              );
+            {(reqs
+              ? reqs.filter((req) => req.status === 'Pending').slice(0, 6)
+              : []
+            ).map((row) => {
+              return <Row key={row.userName} row={row} />;
             })}
           </TableBody>
         </Table>

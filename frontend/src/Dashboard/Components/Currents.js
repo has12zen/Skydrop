@@ -17,41 +17,10 @@ import {
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { getAllOrders } from '../queries';
+import { getAllOrders } from '../Helper/queries';
+import { GetChip } from '../Helper/helper';
 import '../Styles/Requests.css';
 import data from './DummyData';
-
-const GetChip = (chipId) => {
-  switch (chipId) {
-    case "Pending":
-      return (
-        <Chip label="Pending" sx={{ color: 'black', fontWeight: '700' }} />
-      );
-    case "Active":
-      return (
-        <Chip
-          label="Active"
-          sx={{ backgroundColor: 'orange', color: 'white', fontWeight: '700' }}
-        />
-      );
-    case "Completed":
-      return (
-        <Chip
-          label="Completed"
-          sx={{ backgroundColor: 'green', color: 'white', fontWeight: '700' }}
-        />
-      );
-    case "Rejected":
-      return (
-        <Chip
-          label="Rejected"
-          sx={{ backgroundColor: 'red', color: 'white', fontWeight: '700' }}
-        />
-      );
-    default:
-      return;
-  }
-};
 
 const Current = () => {
   const reqs = useOutletContext();
@@ -133,7 +102,7 @@ const Current = () => {
               Name
             </TableCell>
             <TableCell className="tableheader" align="center" sx={{ pl: 5 }}>
-              Weight
+              Weight (KG)
             </TableCell>
             <TableCell className="tableheader" align="center">
               Request Date

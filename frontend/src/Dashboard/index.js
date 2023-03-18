@@ -9,7 +9,7 @@ import {
   Logout,
   LocationOn,
 } from '@mui/icons-material';
-import {getAllOrders, getUsersRequests} from './queries';
+import { getAllOrders, getUsersRequests } from './Helper/queries';
 
 import { getAuth, signOut } from 'firebase/auth';
 
@@ -21,7 +21,7 @@ const Dashboard = ({ setUser, user }) => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [requests, setRequests] = useState([]);
-  console.log("index", {requests})
+  console.log('index', { requests });
 
   useEffect(() => {
     const location = window.location.pathname.split('/')[1];
@@ -58,10 +58,10 @@ const Dashboard = ({ setUser, user }) => {
   useEffect(() => {
     const fetchData = async () => {
       const resp = await getAllOrders();
-      console.log({resp})
+      console.log({ resp });
       setRequests(resp.data);
     };
-    if(user?.admin){
+    if (user?.admin) {
       fetchData();
     }
   }, [user?.admin]);

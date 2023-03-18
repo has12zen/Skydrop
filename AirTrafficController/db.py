@@ -118,9 +118,9 @@ def fun1():
 def fun2():
     print("fun2")
 
-schedule.every(2).seconds.do(get_drones)
+schedule.every(15).seconds.do(get_drones)
 
-schedule.every(4).seconds.do(move_drones)
+schedule.every(10).seconds.do(move_drones)
 
 while True:
     schedule.run_pending()

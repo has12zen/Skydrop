@@ -85,21 +85,23 @@ function MasterMap() {
         const pickUps = [];
         const dropOff = [];
         const new_fatures = [];
+        console.log('req', data);
         data.map((req) => {
-          if (req.status in ['Rejected', 'Completed']) return;
-          new_fatures.push({
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: [
-                [req.pickup.longitude, req.pickup.latitude],
-                [req.destination.longitude, req.destination.latitude],
-              ],
-            },
-          });
-          pickUps.push(req.pickup);
-          dropOff.push(req.destination);
+          if (req.status === 'Active') {
+            new_fatures.push({
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [req.pickup.longitude, req.pickup.latitude],
+                  [req.destination.longitude, req.destination.latitude],
+                ],
+              },
+            });
+            pickUps.push(req.pickup);
+            dropOff.push(req.destination);
+          }
         });
         // console.log('drps marker', dropOff);
         // console.log('pks warehouse', pickUps);

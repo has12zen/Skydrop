@@ -41,7 +41,13 @@ const HistoryElement = ({ data }) => {
 
   return (
     <>
-      <TableRow key={data.id} style={rowStyle[1]}>
+      <TableRow
+        key={data.id}
+        style={{ ...rowStyle[1], cursor: 'pointer' }}
+        onClick={() => {
+          setOpen(!open);
+        }}
+      >
         <TableCell>{data.receiverName}</TableCell>
         <TableCell>{data.id}</TableCell>
         <TableCell>{data.weight}</TableCell>
@@ -56,13 +62,7 @@ const HistoryElement = ({ data }) => {
           </IconButton>
         </TableCell> */}
         <TableCell>
-          <IconButton
-            onClick={() => {
-              setOpen(!open);
-            }}
-          >
-            {open ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}
-          </IconButton>
+          {open ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}
         </TableCell>
       </TableRow>
       {open && (
@@ -87,9 +87,7 @@ const HistoryElement = ({ data }) => {
   );
 };
 
-const ActiveHistory = () => {
-  const [history, setHistory] = useState(null);
-
+const ActiveHistory = ({ history }) => {
   const textStyle = {
     fontFamily: 'TipografiaRamis',
     fontSize: '18px',
@@ -97,48 +95,27 @@ const ActiveHistory = () => {
     color: '#333',
   };
 
-  const fetchHistory = () => {
-    axios
-      .get('/api/requests/active')
-      .then((res) => {
-        setHistory(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
   return (
     <Box>
       <Container sx={{ my: 3 }}>
-        {!history ? (
-          <div>
-            <CircularProgress />
-          </div>
-        ) : (
-          <TableContainer>
-            <Table>
-              <TableHead style={textStyle}>
-                <TableCell>USER</TableCell>
-                <TableCell>PACKAGE ID</TableCell>
-                <TableCell>WEIGHT</TableCell>
-                {/* <TableCell>SIZE</TableCell> */}
-                <TableCell>STATUS</TableCell>
-                {/* <TableCell>APPROVE</TableCell> */}
-                <TableCell></TableCell>
-              </TableHead>
-              <TableBody>
-                {history.map((data, index) => (
-                  <HistoryElement data={data} key={'data-history-' + index} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+        <TableContainer>
+          <Table>
+            <TableHead style={textStyle}>
+              <TableCell style={{ fontWeight: 'bold' }}>USER</TableCell>
+              <TableCell style={{ fontWeight: 'bold' }}>PACKAGE ID</TableCell>
+              <TableCell style={{ fontWeight: 'bold' }}>WEIGHT</TableCell>
+              {/* <TableCell>SIZE</TableCell> */}
+              <TableCell style={{ fontWeight: 'bold' }}>STATUS</TableCell>
+              {/* <TableCell>APPROVE</TableCell> */}
+              <TableCell style={{ fontWeight: 'bold' }}></TableCell>
+            </TableHead>
+            <TableBody>
+              {history.map((data, index) => (
+                <HistoryElement data={data} key={'data-history-' + index} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Container>
     </Box>
   );
@@ -163,7 +140,13 @@ const Home = ({ user }) => {
   };
 
   return (
-    <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
+    <Box
+      sx={{
+        padding: '2vmax 4vmax !important',
+        width: '100%',
+        overflow: 'auto',
+      }}
+    >
       <Box xs={12} style={{ display: 'flex' }}>
         <Avatar src={user.image} style={{ width: '120px', height: '120px' }} />
         <div style={{ marginLeft: '20px', marginTop: '20px' }}>
@@ -187,7 +170,7 @@ const Home = ({ user }) => {
             <CircularProgress />
           </div>
         ) : (
-          <ActiveHistory />
+          <ActiveHistory history={activePickups} />
         )}
       </Box>
     </Box>

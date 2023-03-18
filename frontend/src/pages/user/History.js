@@ -19,8 +19,6 @@ import {
   TableBody,
   TableRow,
   CircularProgress,
-  Button,
-  ClickAwayListener,
   Tooltip,
   Modal,
 } from '@mui/material';
@@ -138,11 +136,15 @@ const HistoryElement = ({ data }) => {
             <TableCell>Longitude {data.pickup.longitude}</TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
           </TableRow>
           <TableRow style={rowStyle[0]}>
             <TableCell>Destination</TableCell>
             <TableCell>Latitude {data.destination.latitude}</TableCell>
             <TableCell>Longitude {data.destination.longitude}</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -177,47 +179,34 @@ const History = () => {
     fetchHistory();
   }, []);
 
-  // const data = [
-  //   {
-  //     userName: 'User Name 1',
-  //     weight: '100 kg',
-  //     size: '100cm x 100cm x 100cm',
-  //     requestDate: '17 Jun 2000',
-  //     packageId: 101,
-  //     status: 0,
-  //     avatar: './user.png',
-  //   },
-  //   {
-  //     userName: 'User Name 2',
-  //     weight: '100 kg',
-  //     size: '100cm x 100cm x 100cm',
-  //     requestDate: '17 Jun 2001',
-  //     packageId: 102,
-  //     status: 1,
-  //     avatar: './user.png',
-  //   },
-  // ];
-
   return (
     <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
       <Typography variant="h4">Order History</Typography>
+      <hr />
       <Container sx={{ my: 3 }}>
         {!history ? (
-          <div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '100px',
+            }}
+          >
             <CircularProgress />
           </div>
         ) : (
           <TableContainer>
             <Table>
               <TableHead style={textStyle}>
-                <TableCell>Track</TableCell>
-                <TableCell>USER</TableCell>
-                <TableCell>PACKAGE ID</TableCell>
-                <TableCell>WEIGHT</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>Track</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>USER</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>PACKAGE ID</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>WEIGHT</TableCell>
                 {/* <TableCell>SIZE</TableCell> */}
-                <TableCell>STATUS</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>STATUS</TableCell>
                 {/* <TableCell>APPROVE</TableCell> */}
-                <TableCell></TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}></TableCell>
               </TableHead>
               <TableBody>
                 {history.map((data, index) => (

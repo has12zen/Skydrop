@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MapProvider, useMap } from 'react-map-gl';
-import { collection} from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import { LiveMap } from '../../Components/Map/liveMap';
 import { Card, CardContent, Typography } from '@mui/material';
 import { query, onSnapshot } from 'firebase/firestore';
@@ -9,23 +9,47 @@ import '../Styles/MasterMap.css';
 import axios from 'axios';
 import { db } from '../../db';
 
+import DronePin from '../../Components/Map/Markers/drone';
+
 const DemoCard = ({ drone }) => {
   const { myMapA } = useMap();
   return (
     <Card
-      sx={{ width: '200px', marginBottom: '10px' }}
+      sx={{
+        width: '200px',
+        margin: '10px 0px 10px 20px',
+        cursor: 'pointer',
+        transition: 'all 0.1s ease-in-out',
+        '&:hover': {
+          backgroundColor: 'rgb(205, 228, 247)',
+          transform: 'scale(1.05)',
+        },
+      }}
       onClick={() => {
         myMapA.flyTo({ center: [drone.longitude, drone.latitude] });
       }}
     >
       <CardContent>
-        <Typography variant="h5" component="h2">
-          {drone.color}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          latitude:{drone.latitude}
-          <br /> longitude:{drone.longitude}
-        </Typography>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <DronePin fill={drone.color} />
+          <Typography
+            variant="h5"
+            component="h2"
+            style={{ marginLeft: '10px' }}
+          >
+            {drone.color}
+          </Typography>
+        </div>
+        <div sx={{ mb: 1.5 }} color="text.secondary">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>latitude:</div>
+            <div>{parseFloat(drone.latitude).toFixed(3)}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>longitude:</div>
+            <div>{parseFloat(drone.longitude).toFixed(3)}</div>
+          </div>
+        </div>
         <Typography variant="body2">This is drone info</Typography>
       </CardContent>
     </Card>
@@ -115,14 +139,20 @@ function MasterMap() {
       <MapProvider>
         <div
           style={{
+            position: 'relative',
             display: 'flex',
             width: '100%',
           }}
         >
           <div
             style={{
+              position: 'absolute',
               overflow: 'auto',
-              width: '200px',
+              width: '100%',
+              bottom: 0,
+              left: 0,
+              display: 'flex',
+              zIndex: 100,
             }}
           >
             {drones.map((drone, index) => (

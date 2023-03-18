@@ -1,18 +1,26 @@
 import React, { PureComponent } from 'react';
 
-
-export default class WarehousePin extends PureComponent {
-
+export default class DronePin extends PureComponent {
   render() {
-    const { size = 20, onClick ,fill='black'} = this.props;
+    const { size = 20, onClick, fill = 'black' } = this.props;
 
     return (
-      <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-        width={`${size}px`} height={`${size}px`} viewBox="0 0 1280.000000 1240.000000"
-        preserveAspectRatio="xMidYMid meet" style={{ filter: 'drop-shadow(2px 4px 6px black)' }} >
-        <g transform="translate(0.000000,1240.000000) scale(0.100000,-0.100000)"
-           stroke="none"fill={fill}>
-          <path d="M3875 12390 c-336 -85 -1036 -696 -1374 -1199 l-61 -91 -48 29 c-26
+      <svg
+        version="1.0"
+        xmlns="http://www.w3.org/2000/svg"
+        width={`${size}px`}
+        height={`${size}px`}
+        viewBox="0 0 1280.000000 1240.000000"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ filter: 'drop-shadow(2px 4px 6px black)' }}
+      >
+        <g
+          transform="translate(0.000000,1240.000000) scale(0.100000,-0.100000)"
+          stroke="none"
+          fill={fill}
+        >
+          <path
+            d="M3875 12390 c-336 -85 -1036 -696 -1374 -1199 l-61 -91 -48 29 c-26
      16 -83 42 -127 57 -71 25 -94 28 -210 28 -148 0 -217 -14 -329 -71 -147 -73
      -253 -183 -327 -338 -79 -165 -89 -348 -30 -524 17 -51 31 -94 31 -95 0 -2
      -30 -22 -68 -44 -217 -129 -596 -455 -821 -707 -454 -507 -593 -895 -289 -811
@@ -57,7 +65,8 @@ export default class WarehousePin extends PureComponent {
      182 216 137z m22 -8577 c43 -25 75 -87 75 -143 0 -39 -6 -52 -35 -85 -45 -50
      -82 -65 -146 -59 -111 11 -167 130 -110 235 14 26 68 69 96 76 31 7 87 -4 120
      -24z m8560 -19 c50 -31 79 -95 70 -152 -10 -57 -77 -123 -133 -133 -74 -12
-     -145 29 -171 98 -18 48 -14 131 9 159 48 62 150 74 225 28z"/>
+     -145 29 -171 98 -18 48 -14 131 9 159 48 62 150 74 225 28z"
+          />
         </g>
       </svg>
     );

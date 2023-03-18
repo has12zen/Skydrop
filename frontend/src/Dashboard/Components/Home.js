@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Grid,
   Box,
@@ -14,9 +14,33 @@ import axios from 'axios';
 import Requests from './Requests';
 import Drones from './Drones';
 import add from '../../assets/home/add.webp';
+import { getAllOrders } from '../queries';
 
 const Home = () => {
-  
+  const [drone, setDrone] = useState();
+  console.log({ drone });
+  useEffect(() => {
+    const fetchData = async () => {
+      const resp = await axios.get('/api/drones');
+      console.log({ resp });
+      const data = resp.data.data;
+      setDrone(data);
+    };
+    fetchData();
+  }, []);
+
+  const [reqs, setReqs] = useState([]);
+  console.log('reqs', { reqs });
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const resp = await getAllOrders();
+      const datas = resp.data;
+      setReqs(datas);
+    };
+    fetchOrders();
+  }, []);
+
   const [open, setOpen] = useState(false);
 
   const handleCancel = () => {
@@ -24,8 +48,16 @@ const Home = () => {
   };
 
   const handleYes = async () => {
-    const resp = await axios.post('http://localhost:3002/api/drones/add');
+    const resp = await axios.post('/api/drones/add');
     console.log({ resp });
+    drone.data.push({
+      available: true,
+      latitude: null,
+      longitude: null,
+      reqId: "",
+      speed: null,
+      working: true,
+    })
     setOpen(false);
   };
 
@@ -42,20 +74,31 @@ const Home = () => {
             </Typography>
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{display: "flex", justifyContent: "space-around", pb: 3}}>
+        <DialogActions
+          sx={{ display: 'flex', justifyContent: 'space-around', pb: 3 }}
+        >
           <Button onClick={handleCancel} color="error" variant="contained">
-            <Typography sx={{color: "white", fontWeight: "600"}}>Cancel</Typography>
+            <Typography sx={{ color: 'white', fontWeight: '600' }}>
+              Cancel
+            </Typography>
           </Button>
-          <Button onClick={handleYes} autoFocus color="success" variant="contained">
-            <Typography sx={{color: "white", fontWeight: "600"}}>Yes</Typography>
+          <Button
+            onClick={handleYes}
+            autoFocus
+            color="success"
+            variant="contained"
+          >
+            <Typography sx={{ color: 'white', fontWeight: '600' }}>
+              Yes
+            </Typography>
           </Button>
         </DialogActions>
       </Dialog>
       <Grid item xs={8} sx={{ mr: 4 }}>
-        <Requests />
+        <Requests reqs={reqs} />
       </Grid>
       <Grid item xs>
-        <Drones />
+        <Drones drone={drone} reqs={reqs} />
         <Box sx={{ my: 4, display: 'flex', justifyContent: 'center' }}>
           <Button
             startIcon={<img src={add} alt="add" width={40} />}

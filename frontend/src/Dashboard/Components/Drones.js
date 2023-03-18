@@ -9,19 +9,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import data from './DummyData';
 
-const Drones = () => {
-  const [drone, setDrone] = useState();
-  console.log({drone});
-  useEffect(() => {
-    const fetchData = async () => {
-      const resp = await axios.get('/api/drone');
-      console.log({resp});
-      setDrone(resp.data);
-    };
-    fetchData();
-  }, []);  
-  
+const Drones = ({drone, reqs}) => {
   const tableRow = (a, b) => {
     return (
       <TableRow sx={{ width: '100%' }}>
@@ -45,11 +35,11 @@ const Drones = () => {
           />
         </Box>
         <Table>
-          {tableRow('Total Drones', 5)}
-          {tableRow('Active Drones', 5)}
-          {tableRow('Available Drones', 0)}
-          {tableRow('Total Requests', 0)}
-          {tableRow('Pending Requests', 0)}
+          {tableRow('Total Drones', drone?.data?.length)}
+          {tableRow('Active Drones', drone?.data?.filter((dr) => dr.working)?.length)}
+          {tableRow('Available Drones', drone?.data?.filter((dr) => dr.available)?.length)}
+          {tableRow('Total Requests', reqs?.data?.length)}
+          {tableRow('Pending Requests', reqs?.data?.filter((req) => req.status==="Pending")?.length)}
         </Table>
       </Paper>
     </Box>

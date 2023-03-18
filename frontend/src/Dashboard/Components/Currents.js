@@ -91,7 +91,7 @@ const Current = () => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src="https://picsum.photos/100" />
               <Typography variant="subtitle1" sx={{ ml: 4, fontWeight: '700' }}>
-                {data.userName}
+                {data.receiverName}
               </Typography>
             </Box>
           </TableCell>
@@ -162,7 +162,7 @@ const Current = () => {
         <TablePagination
           rowsPerPageOptions={[5, 6, 7]}
           component="div"
-          count={reqs.data? reqs.data.length : 0}
+          count={reqs.data? reqs.data?.length : 0}
           rowsPerPage={rowPerPage}
           page={page}
           onPageChange={(e, newpage) => setPage(newpage)}

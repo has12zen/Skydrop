@@ -53,19 +53,7 @@ const GetChip = (chipId) => {
   }
 };
 
-const Requests = () => {
-  const [reqs, setReqs] = useState([]);
-  console.log("reqs", {reqs});
-  
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const resp = await getAllOrders();
-      const datas = resp.data;
-      setReqs(datas)
-    };
-    fetchOrders();
-  }, [])
-  
+const Requests = ({reqs}) => {
   const Row = (props) => {
     const InnerRow = (label, value, border=true) => {
       return (

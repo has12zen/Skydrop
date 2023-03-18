@@ -10,27 +10,26 @@ exports.findByUserId = catchAsync(async (req, res, next) => {
   const reqs = await query.get();
   const data = reqs.docs.map((doc) => doc.data());
 
-  res.status(200).json({
-    status: "Success",
-    data: {
-      reqs: data,
-    },
-  });
+  res.send(data);
 });
 
 exports.create = catchAsync(async (req, res, next) => {
   const reqData = {
     userId: req.user.id,
-    weight: req.body.data.weight,
+    weight: req.body.weight,
     status: "Pending",
     createdTime: new Date(),
-    pickup: req.body.data.pickup,
-    destination: req.body.data.destination,
+    pickup: req.body.pickup,
+    destination: req.body.destination,
+    receiverName: req.body.receiverName,
+    receiverPhone: req.body.receiverPhone,
+    receiverEmail: req.body.receiverEmail,
   };
 
   const collectionRef = db.collection("requests");
   const docRef = await collectionRef.add(reqData);
-  console.log("Document written with ID:", docRef.id);
+
+  console.log("Request created with ID:", docRef.id);
   const reqDoc = await docRef.get();
   const data = reqDoc.data();
 
@@ -63,5 +62,6 @@ exports.update = catchAsync(async (req, res, next) => {
 });
 
 exports.getAll = catchAsync(async (req, res, next) => {
+  console.log("in get all");
   // const docRef = db.collection("req")
 });

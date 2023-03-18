@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-  Autocomplete,
   Button,
   Box,
   Grid,
@@ -13,13 +12,13 @@ import {
   Input,
 } from '@mui/material';
 
-import { DefaultMap } from '../../Components/Map';
-
 import { CheckRounded, SearchRounded } from '@mui/icons-material';
 import { MapProvider, useMap } from 'react-map-gl';
 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
+import { DefaultMap } from '../../Components/Map';
 import { MAPBOX_TOKEN } from '../../constants';
 
 import './RequestPickup.css';
@@ -177,6 +176,8 @@ const SelectLocation = ({
 };
 
 const RequestPickup = () => {
+  const navigate = useNavigate();
+
   const [openPickupDialog, setOpenPickupDialog] = useState(false);
   const [openDestDialog, setOpenDestDialog] = useState(false);
   const [receiverName, setReceiverName] = useState('');
@@ -195,15 +196,26 @@ const RequestPickup = () => {
   });
 
   const placeOrder = () => {
-    const data = { weight: weight, pickup: pickupMarker, dest: destMarker, receiverName, receiverPhone, receiverEmail };
+    const data = {
+      weight,
+      pickup: pickupMarker,
+      destination: destMarker,
+      receiverName,
+      receiverPhone,
+      receiverEmail,
+    };
 
     axios
       .post('/api/requests/create', data)
       .then((res) => {
         console.log({ res });
+
+        navigate('/');
       })
       .catch((err) => {
         console.log({ err });
+
+        alert('Failed to place order. Try again later!');
       });
   };
 
@@ -268,7 +280,11 @@ const RequestPickup = () => {
               backgroundColor: 'rgb(240, 240, 240)',
             }}
           >
-            Select Pickup Location
+            <div style={{ fontWeight: 600 }}>Select Pickup Location</div>
+            <div>
+              lat: {pickupMarker.latitude}, long:
+              {pickupMarker.longitude}
+            </div>
           </div>
           <SelectLocation
             marker={pickupMarker}
@@ -278,8 +294,6 @@ const RequestPickup = () => {
             onClose={() => setOpenPickupDialog(false)}
           />
         </Grid>
-        Pickup Location: lat: {pickupMarker.latitude}, long:
-        {pickupMarker.longitude}
         <Grid item xs={12}>
           <div
             onClick={() => setOpenDestDialog(true)}
@@ -291,7 +305,11 @@ const RequestPickup = () => {
               backgroundColor: 'rgb(240, 240, 240)',
             }}
           >
-            Select Destination Location
+            <div style={{ fontWeight: 600 }}>Select Destination Location</div>
+            <div>
+              lat: {destMarker.latitude}, long:
+              {destMarker.longitude}
+            </div>
           </div>
         </Grid>
         <SelectLocation
@@ -301,8 +319,7 @@ const RequestPickup = () => {
           open={openDestDialog}
           onClose={() => setOpenDestDialog(false)}
         />
-        Destination Location: lat: {destMarker.latitude}, long:
-        {destMarker.longitude}
+
         <Grid
           item
           xs={12}

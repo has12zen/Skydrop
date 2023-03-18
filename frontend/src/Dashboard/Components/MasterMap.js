@@ -85,8 +85,8 @@ function MasterMap() {
         const pickUps = [];
         const dropOff = [];
         const new_fatures = [];
-        data.data.data.map((req) => {
-          if (req.status in ['rejected', 'completed']) return;
+        data.map((req) => {
+          if (req.status in ['Rejected', 'Completed']) return;
           new_fatures.push({
             type: 'Feature',
             properties: {},

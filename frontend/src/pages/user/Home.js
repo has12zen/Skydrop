@@ -49,8 +49,8 @@ const HistoryElement = ({ data }) => {
           setOpen(!open);
         }}
       >
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src="https://picsum.photos/100" />
+        <TableCell>
+          {/* <Avatar src="https://picsum.photos/100" /> */}
           <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
         </TableCell>
         <TableCell>{data.id}</TableCell>

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Grid, 
+import {
+  Box,
+  Grid,
   Typography,
   Card,
   CardContent,
   Menu,
   Button,
   MenuItem,
-  Badge
+  Badge,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ import {
   LocationOn,
 } from '@mui/icons-material';
 import { getAllOrders, getUsersRequests } from './Helper/queries';
-import {notifData} from './Components/DummyData';
+import { notifData } from './Components/DummyData';
 import { getAuth, signOut } from 'firebase/auth';
 import axios from 'axios';
 
@@ -40,7 +40,7 @@ const Dashboard = ({ setUser, user }) => {
   const handleRequestChange = (newReq) => {
     setRequests(newReq);
   };
-  
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -50,8 +50,8 @@ const Dashboard = ({ setUser, user }) => {
   };
   console.log('Index', { requests });
   console.log(notifs);
-  
-  console.log("Index", { drone });
+
+  console.log('Index', { drone });
   useEffect(() => {
     const fetchData = async () => {
       const resp = await axios.get('/api/drones');
@@ -136,56 +136,52 @@ const Dashboard = ({ setUser, user }) => {
       </Box>
     );
   };
-  
+
   function NotificationsButton() {
     return (
       <div>
-      <Button
-        id="demo-positioned-button"
-        aria-controls={open ? 'demo-positioned-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        <NotificationsIcon/>
-      </Button>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-
-        sx={{
-          position: 'absolute',
-          top: '35%',
-          left: '105%',
-          transform: 'translate(-50%, -50%)',
-          // backgroundColor: 'white',
-          width: '50%',
-          height: '50%',
-          textAlign: 'right',
-          padding: 2,
-          opacity: '1',
-          display: "flex"
-        }}
-      >
-
-        {
-        notifs.map((notif) => {
-          return <MenuItem onClick={handleClose}>{notif.data}</MenuItem>;
-        })
-        }
-      </Menu>
-    </div>
+        <Button
+          id="demo-positioned-button"
+          aria-controls={open ? 'demo-positioned-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          <NotificationsIcon />
+        </Button>
+        <Menu
+          id="demo-positioned-menu"
+          aria-labelledby="demo-positioned-button"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          sx={{
+            position: 'absolute',
+            top: '35%',
+            left: '105%',
+            transform: 'translate(-50%, -50%)',
+            // backgroundColor: 'white',
+            width: '50%',
+            height: '50%',
+            textAlign: 'right',
+            padding: 2,
+            opacity: '1',
+            display: 'flex',
+          }}
+        >
+          {notifs.map((notif) => {
+            return <MenuItem onClick={handleClose}>{notif.data}</MenuItem>;
+          })}
+        </Menu>
+      </div>
     );
   }
 
@@ -201,7 +197,7 @@ const Dashboard = ({ setUser, user }) => {
               <>
                 {MenuItem1('Home', '/', <Home />, 0)}
                 {MenuItem1('Current Requests', 'currents', <HourglassTop />, 1)}
-                {MenuItem1('Package History', 'history', <History />, 2)}
+                {MenuItem1('Requests History', 'history', <History />, 2)}
                 {MenuItem1('Master Map', 'map', <LocationOn />, 3)}
                 {MenuItem1('Logout', '', <Logout />, 4, () => {
                   logout();
@@ -222,13 +218,19 @@ const Dashboard = ({ setUser, user }) => {
         <Grid
           item
           xs
-          sx={{ padding: '15px 15px 15px 0px', maxHeight: '100vh', position: "relative" }}
+          sx={{
+            padding: '15px 15px 15px 0px',
+            maxHeight: '100vh',
+            position: 'relative',
+          }}
         >
           <Box
             className="dashContent"
             sx={{ overflow: 'auto', height: '100%' }}
           >
-            <Outlet context={[requests, drone, handleRequestChange, setDrone]} />
+            <Outlet
+              context={[requests, drone, handleRequestChange, setDrone]}
+            />
           </Box>
           <Box
             sx={{
@@ -238,11 +240,11 @@ const Dashboard = ({ setUser, user }) => {
               textAlign: 'right',
               padding: 2,
               opacity: '1',
-              display: "flex"
+              display: 'flex',
             }}
           >
             {/* <NotificationsIcon/> */}
-            <NotificationsButton/>
+            <NotificationsButton />
           </Box>
         </Grid>
       </Grid>

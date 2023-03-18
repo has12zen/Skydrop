@@ -40,8 +40,8 @@ const HistoryElement = ({ data }) => {
   return (
     <>
       <TableRow key={data.id} style={rowStyle[1]}>
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src="https://picsum.photos/100" />
+        <TableCell>
+          {/* <Avatar src="https://picsum.photos/100" /> */}
           <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
         </TableCell>
         <TableCell>{data.id}</TableCell>
@@ -112,13 +112,15 @@ const History = () => {
           <TableContainer>
             <Table>
               <TableHead>
-                <TableCell align="center">USER</TableCell>
-                <TableCell>PACKAGE ID</TableCell>
-                <TableCell>WEIGHT (KG)</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>USER</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>PACKAGE ID</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>
+                  WEIGHT (KG)
+                </TableCell>
                 {/* <TableCell>SIZE</TableCell> */}
-                <TableCell>STATUS</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>STATUS</TableCell>
                 {/* <TableCell>APPROVE</TableCell> */}
-                <TableCell></TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}></TableCell>
               </TableHead>
               <TableBody>
                 {history.map((data, index) => (

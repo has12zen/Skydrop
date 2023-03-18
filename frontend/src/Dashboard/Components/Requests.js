@@ -92,7 +92,7 @@ const Requests = ({ reqs, setReqs, drone, setLreqs }) => {
             />
           </TableCell>
           <TableCell align="left">
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box>
               <Avatar src="https://picsum.photos/100" />
               <Typography variant="subtitle1" sx={{ ml: 4, fontWeight: '700' }}>
                 {row.receiverName}

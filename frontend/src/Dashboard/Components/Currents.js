@@ -45,7 +45,7 @@ const Current = () => {
             />
           </TableCell>
           <TableCell align="left">
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box>
               <Avatar src="https://picsum.photos/100" />
               <Typography variant="subtitle1" sx={{ ml: 4, fontWeight: '700' }}>
                 {data.receiverName}
@@ -110,8 +110,8 @@ const Current = () => {
           </TableHead>
           <TableBody sx={{ overflow: 'scroll' }}>
             {(reqs
-              ? reqs.filter(
-                  (req) => ['Pending', 'Accepted', 'Active'].includes(req.status)
+              ? reqs.filter((req) =>
+                  ['Pending', 'Accepted', 'Active'].includes(req.status)
                 )
               : []
             )

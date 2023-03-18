@@ -26,9 +26,9 @@ import {
 import { LiveMap } from '../../Components/Map/liveMap';
 import './History.css';
 import { getLines } from '../../Utils/geoJson';
-import { query, onSnapshot,collection,where } from 'firebase/firestore';
+import { query, onSnapshot, collection, where } from 'firebase/firestore';
 import axios from 'axios';
-import {db} from '../../db';
+import { db } from '../../db';
 import { GetChip } from '../../Dashboard/Helper/helper';
 
 function BasicModal(props) {
@@ -49,7 +49,7 @@ function BasicModal(props) {
   const [drones, setDrones] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, 'drones'),where('reqId','==',id));
+    const q = query(collection(db, 'drones'), where('reqId', '==', id));
     const sub = onSnapshot(q, (querySnapshot) => {
       const newDrones = [];
       let idx = 0;
@@ -129,8 +129,8 @@ const HistoryElement = ({ data }) => {
         <TableCell>
           <BasicModal req={data} />
         </TableCell>
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src="https://picsum.photos/100" />
+        <TableCell>
+          {/* <Avatar src="https://picsum.photos/100" /> */}
           <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
         </TableCell>
         <TableCell>{data.id}</TableCell>

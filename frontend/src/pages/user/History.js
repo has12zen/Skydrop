@@ -35,16 +35,13 @@ function BasicModal(props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [lines, setLines] = useState();
+  // const [lines, setLines] = useState();
   const [viewState, setViewState] = useState({
     ...destination,
     zoom: 15,
   });
-  useEffect(() => {
-    const points = [[pickup, destination]];
-    const currentLines = getLines(points);
-    setLines(currentLines);
-  }, []);
+  const points = [[pickup, destination]];
+  const currentLines = getLines(points);
   const [markers, setMarkers] = useState([destination]);
   const [warehouses, setWarehouses] = useState([pickup]);
   const [drones, setDrones] = useState([]);
@@ -78,7 +75,7 @@ function BasicModal(props) {
             boxShadow: '0px 0px 5px 5px rgba(0,0,0,0.2)',
             zIndex: 100,
           }}
-          dataOne={lines}
+          dataOne={currentLines}
           viewState={viewState}
           setViewState={setViewState}
           drones={drones}

@@ -62,9 +62,7 @@ exports.addDrone = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: "Success",
-    data: {
-      data,
-    },
+    data,
   });
 });
 
@@ -72,8 +70,8 @@ exports.updateDrone = catchAsync(async (req, res, next) => {
   const docRef = db.collection("drones").doc(req.params.id);
   await docRef.update(req.body);
   console.log("Updated Successfully");
+  const droneDoc = await docRef.get();
+  const data = droneDoc.data();
 
-  res.status(204).json({
-    status: "Success",
-  });
+  res.send({data});
 });

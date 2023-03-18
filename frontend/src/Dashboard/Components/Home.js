@@ -42,14 +42,7 @@ const Home = () => {
   const handleYes = async () => {
     const resp = await axios.post('/api/drones/add');
     console.log({ resp });
-    drone.data.push({
-      available: true,
-      latitude: null,
-      longitude: null,
-      reqId: "",
-      speed: null,
-      working: true,
-    })
+    drone.data.push(resp.data.data);
     setOpen(false);
   };
 

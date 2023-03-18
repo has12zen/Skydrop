@@ -75,12 +75,12 @@ const Current = () => {
                   <tr>
                     <td style={{ fontWeight: '700' }}>Pickup Location</td>
                     <td>:&nbsp;</td>
-                    <td>{plocation}</td>
+                    <td>{`(${data.pickup.latitude}, ${data.pickup.longitude})`}</td>
                   </tr>
                   <tr>
                     <td style={{ fontWeight: '700' }}>Delivery Location</td>
                     <td>:&nbsp;</td>
-                    <td>{dlocation}</td>
+                    <td>{`(${data.destination.latitude}, ${data.destination.longitude})`}</td>
                   </tr>
                 </tbody>
               </Box>

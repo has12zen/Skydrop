@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import {
+  Autocomplete,
   Button,
   Box,
   Grid,
@@ -12,11 +13,15 @@ import {
   Input,
 } from '@mui/material';
 
+import { DefaultMap } from '../../Components/Map';
+
 import { SearchRounded } from '@mui/icons-material';
 
 import axios from 'axios';
 
 import { MAPBOX_TOKEN } from '../../constants';
+
+import './RequestPickup.css';
 
 const SelectLocation = ({ title, onClose, selectedValue, open }) => {
   const [searchText, setSearchText] = useState('');
@@ -42,8 +47,18 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
       });
   };
 
+  useEffect(() => {
+    if (searchText.length === 0) setPlaces([]);
+    else search();
+  }, [searchText]);
+
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      fullWidth
+      PaperProps={{ sx: { width: '100%', height: '100%' } }}
+    >
       <div
         style={{
           padding: '10px',
@@ -54,42 +69,63 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
         }}
       >
         <Typography variant="h5">{title}</Typography>
-        <Input
-          label="Address"
-          type="text"
-          style={{ width: '300px' }}
-          value={searchText}
-          onChange={(e) => {
-            const text = e.target.value.trimStart();
-
-            setSearchText(text);
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => {
-                  if (searchText.length > 0) search();
-                }}
-              >
-                <SearchRounded />
-              </IconButton>
-            </InputAdornment>
-          }
-        />
+        >
+          <Input
+            label="Address"
+            type="text"
+            style={{ width: '300px' }}
+            value={searchText}
+            onChange={(e) => {
+              const text = e.target.value.trimStart();
+
+              setSearchText(text);
+            }}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => {
+                    if (searchText.length > 0) search();
+                  }}
+                >
+                  <SearchRounded />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+
+          <div
+            style={{
+              position: 'absolute',
+              zIndex: 5,
+              background: 'white',
+              top: '50px',
+            }}
+          >
+            {places.map((place, index) => {
+              return (
+                <div
+                  key={'place-result-' + index}
+                  style={{ padding: '10px' }}
+                  class="place-result-pick"
+                >
+                  {place.place_name}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
-      <div>
-        {places.map((place, index) => {
-          return (
-            <div key={'place-result-' + index}>
-              <div>{place.place_name}</div>
-              <div>
-                {place.geometry.coordinates[0]} {place.geometry.coordinates[1]}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+
+      <DefaultMap />
     </Dialog>
   );
 };

@@ -3,8 +3,8 @@ const Router = express.Router();
 const requestController = require("../controllers/requestController");
 const authController = require("../controllers/authController");
 
-// Router.use(authController.verifyToken);
-// Router.use(authController.protect);
+Router.use(authController.verifyToken);
+Router.use(authController.protect);
 
 Router.post("/create", requestController.create);
 Router.delete("/:id", requestController.delete);

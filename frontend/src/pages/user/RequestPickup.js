@@ -42,7 +42,7 @@ function ListPickUps({ places, setMarker }) {
                 longitude: points[0],
               });
               // console.log('myMapB', myMapB);
-              myMapB.flyTo({center: points});
+              myMapB.flyTo({ center: points });
             }}
           >
             {place.place_name}
@@ -53,7 +53,14 @@ function ListPickUps({ places, setMarker }) {
   );
 }
 
-const SelectLocation = ({ title, onClose, selectedValue, open }) => {
+const SelectLocation = ({
+  title,
+  onClose,
+  selectedValue,
+  open,
+  marker,
+  setMarker,
+}) => {
   const [searchText, setSearchText] = useState('');
 
   const [viewState, setViewState] = useState({
@@ -61,11 +68,6 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
     longitude: -73.98,
     zoom: 12,
   });
-  const [marker, setMarker] = useState({
-    latitude: 40.75,
-    longitude: -73.98,
-  });
-  const { myMapB } = useMap();
 
   const [places, setPlaces] = useState([]);
 
@@ -143,7 +145,6 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
                 </InputAdornment>
               }
             />
-              <ListPickUps places={places} setMarker={setMarker} />
             <div
               style={{
                 position: 'absolute',
@@ -151,7 +152,9 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
                 background: 'white',
                 top: '50px',
               }}
-            ></div>
+            >
+              <ListPickUps places={places} setMarker={setMarker} />
+            </div>
           </div>
         </div>
 
@@ -169,6 +172,29 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
 const RequestPickup = () => {
   const [openPickupDialog, setOpenPickupDialog] = useState(false);
   const [openDestDialog, setOpenDestDialog] = useState(false);
+
+  const [pickupMarker, setPickupMarker] = useState({
+    latitude: 40.75,
+    longitude: -73.98,
+  });
+
+  const [destMarker, setDestMarker] = useState({
+    latitude: 40.75,
+    longitude: -73.98,
+  });
+
+  const placeOrder = () => {
+    const data = { weight: '120' };
+
+    axios
+      .post('/api/requests/create', data)
+      .then((res) => {
+        console.log({ res });
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  };
 
   return (
     <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
@@ -218,6 +244,8 @@ const RequestPickup = () => {
             Select Pickup Location
           </div>
           <SelectLocation
+            marker={pickupMarker}
+            setMarker={setPickupMarker}
             title="Select Pickup Location"
             open={openPickupDialog}
             onClose={() => setOpenPickupDialog(false)}
@@ -239,6 +267,8 @@ const RequestPickup = () => {
           </div>
         </Grid>
         <SelectLocation
+          marker={destMarker}
+          setMarker={setDestMarker}
           title="Select Destination Location"
           open={openDestDialog}
           onClose={() => setOpenDestDialog(false)}

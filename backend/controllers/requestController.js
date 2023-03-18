@@ -20,15 +20,12 @@ exports.findByUserId = catchAsync(async (req, res, next) => {
 
 exports.create = catchAsync(async (req, res, next) => {
   const reqData = {
-    userId: "userid",
+    userId: req.user.id,
     weight: req.body.data.weight,
-    height: req.body.data.height,
-    length: req.body.data.length,
-    width: req.body.data.width,
-    status: req.body.data.status,
-    req_date: new Date(),
-    plocation: req.body.data.plocation,
-    dlocation: req.body.data.dlocation,
+    status: "Pending",
+    createdTime: new Date(),
+    pickup: req.body.data.pickup,
+    destination: req.body.data.destination,
   };
 
   const collectionRef = db.collection("requests");
@@ -62,7 +59,7 @@ exports.update = catchAsync(async (req, res, next) => {
 
   res.status(204).json({
     status: "Success",
-  })
+  });
 });
 
 exports.getAll = catchAsync(async (req, res, next) => {

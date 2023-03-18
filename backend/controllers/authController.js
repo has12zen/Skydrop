@@ -22,7 +22,7 @@ exports.verifyToken = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  let user = await User.getUserById({ email: req.user.email });
+  let user = await User.getUserByEmail(req.user.email);
 
   if (!user) return next(new AppError("User not found", 404));
   req.user = user;

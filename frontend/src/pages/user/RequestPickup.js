@@ -186,13 +186,13 @@ const RequestPickup = () => {
   const [weight, setWeight] = useState(0);
 
   const [pickupMarker, setPickupMarker] = useState({
-    latitude: 40.75,
-    longitude: -73.98,
+    latitude: 20.14529,
+    longitude: 85.67352,
   });
 
   const [destMarker, setDestMarker] = useState({
-    latitude: 40.75,
-    longitude: -73.98,
+    latitude: 20.14529,
+    longitude: 85.67352,
   });
 
   const placeOrder = () => {

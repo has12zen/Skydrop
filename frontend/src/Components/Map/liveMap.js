@@ -16,31 +16,31 @@ import WarehousePin from './Markers/warehouse';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-function NavigationPin(props){
-    const {drones,keyhash} = props; 
-    const { current } = useMap();
-    const _onClickFocus = (pin) => {
-      current.flyTo({ center: [pin.longitude, pin.latitude]  });
-    };
-    return (
-      <>
-        {drones &&
-          drones.map((drone, index) => {
-            return (
-              <Marker
-                key={`marker-drone-${index}`}
-                longitude={drone.longitude}
-                latitude={drone.latitude}
-                color={drone.color}
-                onClick={() => _onClickFocus(drone)}
-              >
-                {keyhash==='drone' && <DronePin fill={drone.color} size={30} />}
-                {keyhash==='warehouse' && <WarehousePin size={30}/>}
-              </Marker>
-            );
-          })}
-      </>
-    );
+function NavigationPin(props) {
+  const { drones, keyhash } = props;
+  const { current } = useMap();
+  const _onClickFocus = (pin) => {
+    current.flyTo({ center: [pin.longitude, pin.latitude] });
+  };
+  return (
+    <>
+      {drones &&
+        drones.map((drone, index) => {
+          return (
+            <Marker
+              key={`marker-drone-${index}`}
+              longitude={drone.longitude}
+              latitude={drone.latitude}
+              color={drone.color}
+              onClick={() => _onClickFocus(drone)}
+            >
+              {keyhash === 'drone' && <DronePin fill={drone.color} size={30} />}
+              {keyhash === 'warehouse' && <WarehousePin size={30} />}
+            </Marker>
+          );
+        })}
+    </>
+  );
 }
 
 function LiveMap(props) {
@@ -53,14 +53,16 @@ function LiveMap(props) {
   return (
     <Map
       id="myMapA"
+      className="modalMap"
+      style={props?.style ?? {}}
       {...viewState}
       onMove={(evt) => setViewState(evt.viewState)}
       mapStyle="mapbox://styles/mapbox/streets-v12"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
-      <NavigationPin drones={drones} keyhash='drone' />
-      <NavigationPin drones={warehouses} keyhash='warehouse' />
-      <NavigationPin drones={markers} keyhash='marker' />
+      <NavigationPin drones={drones} keyhash="drone" />
+      <NavigationPin drones={warehouses} keyhash="warehouse" />
+      <NavigationPin drones={markers} keyhash="marker" />
       <GeolocateControl
         onViewportChange={_onViewportChange}
         showAccuracyCircle={false}

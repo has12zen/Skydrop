@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   CheckRounded,
   CloseRounded,
+  ShareLocationRounded,
   KeyboardArrowDownRounded,
   KeyboardArrowUpRounded,
 } from '@mui/icons-material';
@@ -17,11 +18,77 @@ import {
   Container,
   TableBody,
   TableRow,
-  Avatar,
   CircularProgress,
+  Button,
+  ClickAwayListener,
+  Tooltip,
+  Modal,
 } from '@mui/material';
-
+import { LiveMap } from '../../Components/Map/liveMap';
+import './History.css';
+import { getLines } from '../../Utils/geoJson';
 import axios from 'axios';
+
+function BasicModal(props) {
+  const { req } = props;
+  const { destination, pickup, id } = req;
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [lines, setLines] = useState();
+  const [viewState, setViewState] = useState({
+    ...destination,
+    zoom: 15,
+  });
+  useEffect(() => {
+    const points = [[pickup, destination]];
+    const currentLines = getLines(points);
+    setLines(currentLines);
+  }, []);
+  const [markers, setMarkers] = useState([destination]);
+  const [warehouses, setWarehouses] = useState([pickup]);
+  const [drones, setDrones] = useState([]);
+  return (
+    <div>
+      <IconButton onClick={handleOpen}>
+        <Tooltip title="Share Location">
+          <ShareLocationRounded />
+        </Tooltip>
+      </IconButton>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <LiveMap
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          style={{
+            height: '80%',
+            width: '80%',
+            borderRadius: '10px',
+            boxShadow: '0px 0px 5px 5px rgba(0,0,0,0.2)',
+            zIndex: 100,
+          }}
+          dataOne={lines}
+          viewState={viewState}
+          setViewState={setViewState}
+          drones={drones}
+          warehouses={warehouses}
+          markers={markers}
+        />
+      </Modal>
+    </div>
+  );
+}
 
 const HistoryElement = ({ data }) => {
   console.log({ data });
@@ -40,6 +107,9 @@ const HistoryElement = ({ data }) => {
   return (
     <>
       <TableRow key={data.id} style={rowStyle[1]}>
+        <TableCell>
+          <BasicModal req={data} />
+        </TableCell>
         <TableCell>{data.receiverName}</TableCell>
         <TableCell>{data.id}</TableCell>
         <TableCell>{data.weight}</TableCell>
@@ -143,6 +213,7 @@ const History = () => {
           <TableContainer>
             <Table>
               <TableHead style={textStyle}>
+                <TableCell>Track</TableCell>
                 <TableCell>USER</TableCell>
                 <TableCell>PACKAGE ID</TableCell>
                 <TableCell>WEIGHT</TableCell>

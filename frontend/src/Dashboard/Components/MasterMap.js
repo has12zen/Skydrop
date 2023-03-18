@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MapProvider, useMap } from 'react-map-gl';
-import { collection, where } from 'firebase/firestore';
+import { collection} from 'firebase/firestore';
 import { LiveMap } from '../../Components/Map/liveMap';
 import { Card, CardContent, Typography } from '@mui/material';
 import { query, onSnapshot } from 'firebase/firestore';
@@ -40,17 +40,13 @@ function MasterMap() {
         properties: {},
         geometry: {
           type: 'LineString',
-          // coordinates: [
-          //   [warehouses[0].longitude, warehouses[0].latitude],
-          //   [markers[0].longitude, markers[0].longitude],
-          // ],
         },
       },
     ],
   };
   const [viewState, setViewState] = useState({
-    latitude: 40,
-    longitude: -73,
+    latitude: 20.14529,
+    longitude: 85.67352,
     zoom: 12,
   });
   const [markers, setMarkers] = useState([]);

@@ -12,16 +12,8 @@ import { MAPBOX_TOKEN } from '../../constants';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-function DefaultMap() {
-  const [viewState, setViewState] = useState({
-    latitude: 40.75,
-    longitude: -73.98,
-    zoom: 12,
-  });
-  const [marker, setMarker] = useState({
-    latitude: 40.75,
-    longitude: -73.98,
-  });
+function DefaultMap(props) {
+    const {viewState, setViewState,marker,setMarker} = props
   const _onViewportChange = (viewport) => {
     viewport.zoom = 3; //Whatever zoom level you want
     setViewState(viewport);
@@ -34,7 +26,7 @@ function DefaultMap() {
   }, []);
   return (
     <Map
-      id="mapData"
+      id="myMapB"
       {...viewState}
       onMove={(evt) => setViewState(evt.viewState)}
       // style={{ width: 800, height: 600 }}

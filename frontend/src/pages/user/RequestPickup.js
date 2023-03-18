@@ -16,6 +16,7 @@ import {
 import { DefaultMap } from '../../Components/Map';
 
 import { SearchRounded } from '@mui/icons-material';
+import { MapProvider, useMap } from 'react-map-gl';
 
 import axios from 'axios';
 
@@ -23,8 +24,48 @@ import { MAPBOX_TOKEN } from '../../constants';
 
 import './RequestPickup.css';
 
+function ListPickUps({ places, setMarker }) {
+  const { myMapB } = useMap();
+  return (
+    <>
+      {places.map((place, index) => {
+        return (
+          <div
+            key={'place-result-' + index}
+            style={{ padding: '10px' }}
+            class="place-result-pick"
+            onClick={() => {
+              const points = place.geometry.coordinates;
+              // console.log('place', place);
+              setMarker({
+                latitude: points[1],
+                longitude: points[0],
+              });
+              // console.log('myMapB', myMapB);
+              myMapB.flyTo({center: points});
+            }}
+          >
+            {place.place_name}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 const SelectLocation = ({ title, onClose, selectedValue, open }) => {
   const [searchText, setSearchText] = useState('');
+
+  const [viewState, setViewState] = useState({
+    latitude: 40.75,
+    longitude: -73.98,
+    zoom: 12,
+  });
+  const [marker, setMarker] = useState({
+    latitude: 40.75,
+    longitude: -73.98,
+  });
+  const { myMapB } = useMap();
 
   const [places, setPlaces] = useState([]);
 
@@ -53,80 +94,75 @@ const SelectLocation = ({ title, onClose, selectedValue, open }) => {
   }, [searchText]);
 
   return (
-    <Dialog
-      onClose={handleClose}
-      open={open}
-      fullWidth
-      PaperProps={{ sx: { width: '100%', height: '100%' } }}
-    >
-      <div
-        style={{
-          padding: '10px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
+    <MapProvider>
+      <Dialog
+        onClose={handleClose}
+        open={open}
+        fullWidth
+        PaperProps={{ sx: { width: '100%', height: '100%' } }}
       >
-        <Typography variant="h5">{title}</Typography>
         <div
           style={{
-            position: 'relative',
-            width: '100%',
+            padding: '10px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            flexDirection: 'column',
           }}
         >
-          <Input
-            label="Address"
-            type="text"
-            style={{ width: '300px' }}
-            value={searchText}
-            onChange={(e) => {
-              const text = e.target.value.trimStart();
-
-              setSearchText(text);
-            }}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => {
-                    if (searchText.length > 0) search();
-                  }}
-                >
-                  <SearchRounded />
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-
+          <Typography variant="h5">{title}</Typography>
           <div
             style={{
-              position: 'absolute',
-              zIndex: 5,
-              background: 'white',
-              top: '50px',
+              position: 'relative',
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            {places.map((place, index) => {
-              return (
-                <div
-                  key={'place-result-' + index}
-                  style={{ padding: '10px' }}
-                  class="place-result-pick"
-                >
-                  {place.place_name}
-                </div>
-              );
-            })}
+            <Input
+              label="Address"
+              type="text"
+              style={{ width: '300px' }}
+              value={searchText}
+              onChange={(e) => {
+                const text = e.target.value.trimStart();
+
+                setSearchText(text);
+              }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => {
+                      if (searchText.length > 0) search();
+                    }}
+                  >
+                    <SearchRounded />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+              <ListPickUps places={places} setMarker={setMarker} />
+            <div
+              style={{
+                position: 'absolute',
+                zIndex: 5,
+                background: 'white',
+                top: '50px',
+              }}
+            ></div>
           </div>
         </div>
-      </div>
 
-      <DefaultMap />
-    </Dialog>
+        <DefaultMap
+          marker={marker}
+          setMarker={setMarker}
+          viewState={viewState}
+          setViewState={setViewState}
+        />
+      </Dialog>
+    </MapProvider>
   );
 };
 

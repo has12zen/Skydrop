@@ -47,8 +47,8 @@ exports.getAllInfo = catchAsync(async (req, res, next) => {
 exports.addDrone = catchAsync(async (req, res, next) => {
   const droneData = {
     reqId: "",
-    latitute: null,
-    longitude: null,
+    latitute: 20.149,
+    longitude: 85.665,
     speed: null,
     available: true,
     working: true,

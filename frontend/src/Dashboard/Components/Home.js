@@ -9,6 +9,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Backdrop,
+  CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
 import Requests from './Requests';
@@ -18,39 +20,35 @@ import { getAllOrders } from '../Helper/queries';
 import { useOutletContext } from 'react-router-dom';
 
 const Home = () => {
-  const [drone, setDrone] = useState();
-  console.log({ drone });
-  useEffect(() => {
-    const fetchData = async () => {
-      const resp = await axios.get('/api/drones');
-      console.log({ resp });
-      const data = resp.data.data;
-      setDrone(data);
-    };
-    fetchData();
-  }, []);
-
-  const reqs = useOutletContext();
+  const props = useOutletContext();
+  const reqs = props[0];
+  const drone = props[1];
   console.log('Home', { reqs });
 
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCancel = () => {
     setOpen(false);
   };
 
   const handleYes = async () => {
+    setOpen(false);
+    setLoading(true);
     const resp = await axios.post('/api/drones/add');
     console.log({ resp });
     drone.data.push(resp.data.data);
-    setOpen(false);
+    setLoading(false);
   };
 
   return (
     <Grid container sx={{ padding: '2vmax 4vmax !important', display: 'flex' }}>
+      <Backdrop open={loading} sx={{color: '#fff', zIndex: 1000}}>
+        <CircularProgress color='inherit' />
+      </Backdrop>
       <Dialog open={open} onClose={handleCancel}>
         <DialogTitle>
-          <Typography variant="h5">Add Drone</Typography>
+          <Typography sx={{ fontWeight: '700' }}>Add Drone</Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -62,8 +60,8 @@ const Home = () => {
         <DialogActions
           sx={{ display: 'flex', justifyContent: 'space-around', pb: 3 }}
         >
-          <Button onClick={handleCancel} color="error" variant="contained">
-            <Typography sx={{ color: 'white', fontWeight: '600' }}>
+          <Button onClick={handleCancel} color="error" variant="contained" size='small'>
+            <Typography sx={{ color: 'white', fontWeight: '600' }} variant='subtitle1'>
               Cancel
             </Typography>
           </Button>
@@ -72,15 +70,20 @@ const Home = () => {
             autoFocus
             color="success"
             variant="contained"
+            size='small'
           >
-            <Typography sx={{ color: 'white', fontWeight: '600' }}>
+            <Typography sx={{ color: 'white', fontWeight: '600' }} variant='subtitle1'>
               Yes
             </Typography>
           </Button>
         </DialogActions>
       </Dialog>
       <Grid item xs={8} sx={{ mr: 4 }}>
-        <Requests reqs={reqs} />
+        <Requests
+          reqs={reqs}
+          setReqs={props[2]}
+          drone={drone?.data?.filter((dr) => dr.available)?.length}
+        />
       </Grid>
       <Grid item xs>
         <Drones drone={drone} reqs={reqs} />

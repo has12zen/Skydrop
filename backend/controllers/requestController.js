@@ -64,24 +64,18 @@ exports.update = catchAsync(async (req, res, next) => {
   const docRef = db.collection("requests").doc(req.params.id);
   await docRef.update(req.body);
   console.log("Updated Successfully");
+  const data = await docRef.get();
 
-  res.status(204).json({
-    status: "Success",
-  });
+  res.send(data.data());
 });
 
 exports.getAll = catchAsync(async (req, res, next) => {
   const docRef = db.collection("requests");
   const reqs = await docRef.get();
-  const data = reqs.docs.map((doc) => doc.data());
+  const data = reqs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   console.log("Got all data");
 
-  res.status(200).json({
-    status: "Success",
-    data: {
-      data,
-    },
-  });
+  res.send(data);
 });
 
 exports.getActiveRequests = catchAsync(async (req, res, next) => {

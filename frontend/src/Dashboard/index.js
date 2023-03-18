@@ -23,6 +23,7 @@ import {
 import { getAllOrders, getUsersRequests } from './Helper/queries';
 import {notifData} from './Components/DummyData';
 import { getAuth, signOut } from 'firebase/auth';
+import axios from 'axios';
 
 const eraseCookie = (name) => {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -34,6 +35,13 @@ const Dashboard = ({ setUser, user }) => {
   const [requests, setRequests] = useState([]);
   const [notifs, setNotifs] = useState(notifData);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [drone, setDrone] = useState();
+
+  const handleRequestChange = (newReq) => {
+    console.log("change", newReq);
+    setRequests(newReq);
+  };
+  
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -43,6 +51,17 @@ const Dashboard = ({ setUser, user }) => {
   };
   console.log('index', { requests });
   console.log(notifs);
+  
+  console.log("Index", { drone });
+  useEffect(() => {
+    const fetchData = async () => {
+      const resp = await axios.get('/api/drones');
+      console.log("Index Resp", { resp });
+      const data = resp.data.data;
+      setDrone(data);
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const location = window.location.pathname.split('/')[1];
@@ -79,8 +98,8 @@ const Dashboard = ({ setUser, user }) => {
   useEffect(() => {
     const fetchData = async () => {
       const resp = await getAllOrders();
-      console.log({ resp });
-      setRequests(resp.data);
+      console.log("Index Resp",{ resp });
+      setRequests(resp);
     };
     if (user?.admin) {
       fetchData();
@@ -206,23 +225,19 @@ const Dashboard = ({ setUser, user }) => {
         <Grid
           item
           xs
-          sx={{ padding: '15px 15px 15px 0px', maxHeight: '100vh' }}
+          sx={{ padding: '15px 15px 15px 0px', maxHeight: '100vh', position: "relative" }}
         >
           <Box
             className="dashContent"
             sx={{ overflow: 'auto', height: '100%' }}
           >
-            <Outlet context={requests.data} />
+            <Outlet context={[requests, drone, handleRequestChange, setDrone]} />
           </Box>
           <Box
             sx={{
               position: 'absolute',
-              top: '30%',
-              left: '118%',
-              transform: 'translate(-50%, -50%)',
-              // backgroundColor: 'white',
-              width: '50%',
-              height: '50%',
+              top: '15px',
+              right: '30px',
               textAlign: 'right',
               padding: 2,
               opacity: '1',

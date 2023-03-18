@@ -21,11 +21,13 @@ import {
   CircularProgress,
   Tooltip,
   Modal,
+  Avatar,
 } from '@mui/material';
 import { LiveMap } from '../../Components/Map/liveMap';
 import './History.css';
 import { getLines } from '../../Utils/geoJson';
 import axios from 'axios';
+import { GetChip } from '../../Dashboard/Helper/helper';
 
 function BasicModal(props) {
   const { req } = props;
@@ -105,11 +107,14 @@ const HistoryElement = ({ data }) => {
         <TableCell>
           <BasicModal req={data} />
         </TableCell>
-        <TableCell>{data.receiverName}</TableCell>
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar src="https://picsum.photos/100" />
+          <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
+        </TableCell>
         <TableCell>{data.id}</TableCell>
         <TableCell>{data.weight}</TableCell>
         {/* <TableCell>{data.size}</TableCell> */}
-        <TableCell>{data.status}</TableCell>
+        <TableCell>{GetChip(data.status)}</TableCell>
         {/* <TableCell>
           <IconButton style={{ color: 'green' }}>
             <CheckRounded />

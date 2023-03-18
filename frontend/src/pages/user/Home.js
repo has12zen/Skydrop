@@ -20,6 +20,7 @@ import {
   KeyboardArrowDownRounded,
   KeyboardArrowUpRounded,
 } from '@mui/icons-material';
+import { GetChip } from '../../Dashboard/Helper/helper';
 
 import axios from 'axios';
 // import Requests from './Requests';
@@ -48,11 +49,14 @@ const HistoryElement = ({ data }) => {
           setOpen(!open);
         }}
       >
-        <TableCell>{data.receiverName}</TableCell>
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar src="https://picsum.photos/100" />
+          <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
+        </TableCell>
         <TableCell>{data.id}</TableCell>
         <TableCell>{data.weight}</TableCell>
         {/* <TableCell>{data.size}</TableCell> */}
-        <TableCell>{data.status}</TableCell>
+        <TableCell>{GetChip(data.status)}</TableCell>
         {/* <TableCell>
           <IconButton style={{ color: 'green' }}>
             <CheckRounded />
@@ -154,7 +158,6 @@ const Home = ({ user }) => {
           <div style={{ fontSize: '18px' }}>{user.email}</div>
         </div>
       </Box>
-
       <Box style={{ marginTop: '40px', width: '100%' }}>
         <Typography variant="h4">Active Pickups</Typography>
         <hr />

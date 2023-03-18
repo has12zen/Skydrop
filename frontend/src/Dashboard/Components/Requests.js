@@ -14,15 +14,54 @@ import {
   Avatar,
   Chip,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Container,
+  Backdrop,
+  CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDropDown, Send } from '@mui/icons-material';
+import {
+  ArrowDropDown,
+  Send,
+  ArrowRightAlt,
+} from '@mui/icons-material';
 import '../Styles/Requests.css';
 import { getAllOrders } from '../Helper/queries';
 import { GetChip } from '../Helper/helper';
 import data from './DummyData';
 
-const Requests = ({ reqs }) => {
+const Requests = ({ reqs, setReqs, drone }) => {
+  const [dopen, setDopen] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleClose = () => {
+    setDopen('');
+  };
+
+  const handleOpen = (id) => {
+    setDopen(id);
+  };
+
+  const handleStatusChange = async (status) => {
+    setDopen('');
+    setLoading(true);
+    const resp = await axios.patch(`/api/requests/${dopen}`, {
+      status,
+    });
+    console.log('Status', { resp });
+    const temp = reqs;
+    temp.forEach((req) => {
+      if (req.id === dopen) {
+        req.status = status;
+      }
+    });
+    setReqs(temp);
+    setLoading(false);
+  };
+
   const Row = (props) => {
     const InnerRow = (label, value, border = true) => {
       return (
@@ -66,7 +105,9 @@ const Requests = ({ reqs }) => {
           <TableCell align="center" sx={{ fontWeight: '600' }}>
             {Date(row.createdTime._seconds).toString().slice(0, 24)}
           </TableCell>
-          <TableCell align="center">{GetChip(row.status)}</TableCell>
+          <TableCell align="center">
+            <Box onClick={() => row.status === 'Pending' ? handleOpen(row.id) : null}>{GetChip(row.status)}</Box>
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell colSpan={4} sx={{ p: 0 }}>
@@ -98,6 +139,44 @@ const Requests = ({ reqs }) => {
 
   return (
     <Box sx={{ py: 3 }}>
+      <Backdrop open={loading} sx={{color: '#fff', zIndex: 1000}}>
+        <CircularProgress color='inherit' />
+      </Backdrop>
+      <Dialog open={dopen.length !== 0} onClose={handleClose}>
+        <DialogTitle sx={{ px: 4 }}>
+          <Typography textAlign={'center'} sx={{ fontWeight: '700' }}>
+            Accept the Request
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Container
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              py:2
+            }}
+          >
+            <Box onClick={() => handleStatusChange('Rejected')} sx={{filter: "drop-shadow(0px 0px 5px rgb(0,0,0,0.5))", transform: "scale(1.1)"}}>{GetChip('Rejected')}</Box>
+            <ArrowRightAlt sx={{ mx: 2, transform:"rotate(180deg)" }} />
+            {GetChip('Pending')}
+            <ArrowRightAlt sx={{ mx: 2 }} />
+            <Box onClick={() => true ? handleStatusChange('Accepted') : null} sx={{filter: "drop-shadow(0px 0px 5px rgb(0,0,0,0.5))", transform: "scale(1.1)"}}>{GetChip('Accepted')}</Box>
+          </Container>
+          {false && (
+            <Container sx={{ mt: 3 }}>
+              <Typography
+                textAlign={'center'}
+                sx={{ fontWeight: '800' }}
+                variant="h6"
+                color={'error'}
+              >
+                No Drones Available !!
+              </Typography>
+            </Container>
+          )}
+        </DialogContent>
+      </Dialog>
       <Typography variant="h5">Requests</Typography>
       <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table>
@@ -115,7 +194,7 @@ const Requests = ({ reqs }) => {
           </TableHead>
           <TableBody>
             {(reqs
-              ? reqs.filter((req) => req.status === 'Pending').slice(0, 6)
+              ? reqs.filter((req) => ['Pending', 'Accepted', 'Active'].includes(req.status)).slice(0, 6)
               : []
             ).map((row) => {
               return <Row key={row.userName} row={row} />;

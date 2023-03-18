@@ -44,7 +44,7 @@ const HistoryElement = ({ data }) => {
           <Avatar src="https://picsum.photos/100" />
           <Typography sx={{ ml: 2 }}>{data.receiverName}</Typography>
         </TableCell>
-        <TableCell>{data.userId}</TableCell>
+        <TableCell>{data.id}</TableCell>
         <TableCell>{data.weight}</TableCell>
         {/* <TableCell>{data.size}</TableCell> */}
         <TableCell>{GetChip(data.status)}</TableCell>
@@ -89,8 +89,11 @@ const HistoryElement = ({ data }) => {
 };
 
 const History = () => {
-  const reqs = useOutletContext();
-  const history = reqs?.filter((req) => req.status !== 'Pending');
+  const props = useOutletContext();
+  const reqs = props[0];
+  const history = reqs?.filter(
+    (req) => !['Pending', 'Accepted', 'Active'].includes(req.status)
+  );
   return (
     <Box sx={{ padding: '2vmax 4vmax !important', width: '100%' }}>
       <Typography variant="h4">Order History</Typography>

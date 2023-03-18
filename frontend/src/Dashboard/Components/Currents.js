@@ -23,7 +23,8 @@ import '../Styles/Requests.css';
 import data from './DummyData';
 
 const Current = () => {
-  const reqs = useOutletContext();
+  const props = useOutletContext();
+  const reqs = props[0];
 
   const [page, setPage] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
@@ -31,10 +32,6 @@ const Current = () => {
   const Row = (props) => {
     const data = props.row;
     const [open, setOpen] = useState(false);
-    const plocation =
-      '23 Street, 2nd Cross, 3rd Main, 4th Block, 5th Ward, 6th Town, 7th City, 8th State, 9th Country';
-    const dlocation =
-      '23 Street, 2nd Cross, 3rd Main, 4th Block, 5th Ward, 6th Town, 7th City, 8th State, 9th Country';
     return (
       <React.Fragment>
         <TableRow>
@@ -112,7 +109,12 @@ const Current = () => {
             </TableCell>
           </TableHead>
           <TableBody sx={{ overflow: 'scroll' }}>
-            {(reqs ? reqs.filter((req) => req.status === 'Pending') : [])
+            {(reqs
+              ? reqs.filter(
+                  (req) => ['Pending', 'Accepted', 'Active'].includes(req.status)
+                )
+              : []
+            )
               .slice(page * rowPerPage, page * rowPerPage + rowPerPage)
               .map((row) => {
                 return <Row key={row.userName} row={row} />;

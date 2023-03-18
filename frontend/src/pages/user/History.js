@@ -26,7 +26,9 @@ import {
 import { LiveMap } from '../../Components/Map/liveMap';
 import './History.css';
 import { getLines } from '../../Utils/geoJson';
+import { query, onSnapshot,collection,where } from 'firebase/firestore';
 import axios from 'axios';
+import {db} from '../../db';
 import { GetChip } from '../../Dashboard/Helper/helper';
 
 function BasicModal(props) {
@@ -45,6 +47,26 @@ function BasicModal(props) {
   const [markers, setMarkers] = useState([destination]);
   const [warehouses, setWarehouses] = useState([pickup]);
   const [drones, setDrones] = useState([]);
+
+  useEffect(() => {
+    const q = query(collection(db, 'drones'),where('reqId','==',id));
+    const sub = onSnapshot(q, (querySnapshot) => {
+      const newDrones = [];
+      let idx = 0;
+      const clrMap = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
+      querySnapshot.docs.map((doc) => {
+        if (!doc.data().latitude) return;
+        if (!doc.data().longitude) return;
+        newDrones.push({
+          ...doc.data(),
+          color: clrMap[idx++],
+        });
+        idx = idx % clrMap.length;
+      });
+      setDrones(newDrones);
+    });
+  }, []);
+
   return (
     <div>
       <IconButton onClick={handleOpen}>

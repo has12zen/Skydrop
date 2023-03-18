@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
-import { MapProvider,useMap } from 'react-map-gl';
+import { useState, useEffect } from 'react';
+import { MapProvider, useMap } from 'react-map-gl';
+import { collection, where } from 'firebase/firestore';
 import { LiveMap } from '../../Components/Map/liveMap';
 import { Card, CardContent, Typography } from '@mui/material';
+import { query, onSnapshot } from 'firebase/firestore';
 import '../Styles/MasterMap.css';
+import axios from 'axios';
+import { db } from '../../db';
 
-const DemoCard = ({ drone}) => {
+const DemoCard = ({ drone }) => {
   const { myMapA } = useMap();
   return (
     <Card
@@ -27,30 +31,6 @@ const DemoCard = ({ drone}) => {
   );
 };
 function MasterMap() {
-  const [viewState, setViewState] = useState({
-    latitude: 40,
-    longitude: -73,
-    zoom: 12,
-  });
-  const [markers, setMarkers] = useState([
-    {
-      latitude: 41.75,
-      longitude: -73.98,
-    },
-  ]);
-  const [warehouses, setWarehouses] = useState([
-    {
-      latitude: 39,
-      longitude: -73.98,
-    },
-  ]);
-  const [drones, setDrones] = useState([
-    {
-      latitude: 40.75,
-      longitude: -73.98,
-      color: 'red',
-    },
-  ]);
   const dataOne = {
     type: 'FeatureCollection',
     features: [
@@ -59,25 +39,76 @@ function MasterMap() {
         properties: {},
         geometry: {
           type: 'LineString',
-          coordinates: [
-            [warehouses[0].longitude, warehouses[0].latitude],
-            [markers[0].longitude, markers[0].latitude],
-          ],
-        },
-      },
-      {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: [
-            [warehouses[0].longitude, warehouses[0].latitude],
-            [markers[0].longitude, markers[0].longitude],
-          ],
+          // coordinates: [
+          //   [warehouses[0].longitude, warehouses[0].latitude],
+          //   [markers[0].longitude, markers[0].longitude],
+          // ],
         },
       },
     ],
   };
+  const [viewState, setViewState] = useState({
+    latitude: 40,
+    longitude: -73,
+    zoom: 12,
+  });
+  const [markers, setMarkers] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [drones, setDrones] = useState([]);
+  const [jsonData, setJsonData] = useState(null);
+  const getRequests = async () => {
+    axios
+      .get(`/api/requests/getAll`)
+      .then((res) => {
+        const { data } = res;
+        const pickUps = [];
+        const dropOff = [];
+        const new_fatures = [];
+        data.data.data.map((req) => {
+          if (req.status in ['rejected', 'completed']) return;
+          new_fatures.push({
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: [[req.pickup.longitude, req.pickup.latitude], [req.destination.longitude, req.destination.latitude]],
+            },
+          });
+          pickUps.push(req.pickup);
+          dropOff.push(req.destination);
+        });
+        // console.log('drps marker', dropOff);
+        // console.log('pks warehouse', pickUps);
+        setMarkers(dropOff);
+        setWarehouses(pickUps);
+        dataOne.features = new_fatures;
+        setJsonData(dataOne);
+        console.log('dataOne', dataOne)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    const q = query(collection(db, 'drones'));
+    getRequests();
+    const sub = onSnapshot(q, (querySnapshot) => {
+      const newDrones = [];
+      let idx = 0;
+      const clrMap = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
+      querySnapshot.docs.map((doc) => {
+        if (!doc.data().latitude) return;
+        if (!doc.data().longitude) return;
+        // if(!doc.data().available) return;
+        newDrones.push({
+          ...doc.data(),
+          color: clrMap[idx++],
+        });
+        idx = idx % clrMap.length;
+      });
+      setDrones(newDrones);
+    });
+  }, []);
 
   return (
     <>
@@ -95,13 +126,13 @@ function MasterMap() {
           >
             {drones.map((drone, index) => (
               <div key={index} item xs={12}>
-                <DemoCard drone={drone}  />
+                <DemoCard drone={drone} />
               </div>
             ))}
           </div>
           <div id="mapCont">
             <LiveMap
-              dataOne={dataOne}
+              dataOne={jsonData}
               viewState={viewState}
               setViewState={setViewState}
               drones={drones}

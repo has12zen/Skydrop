@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
+import {getFirestore} from 'firebase/firestore';
 
 import {
   API_KEY,
@@ -25,6 +26,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const messaging = getMessaging(app);
+export const db = getFirestore(app);
+
 export const fetchToken = (setTokenFound) => {
   return getToken(messaging, { vapidKey: WEB_NOTIFICATION }).then((currentToken) => {
     if (currentToken) {

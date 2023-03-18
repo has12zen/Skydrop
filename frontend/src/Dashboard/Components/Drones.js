@@ -32,6 +32,7 @@ const Drones = ({ drone, reqs }) => {
             src="https://thumbs.gfycat.com/ColorfulUnluckyArthropods-max-1mb.gif"
             alt="drone"
             width={200}
+            style={{filter: "drop-shadow(-20px 20px 5px rgba(0,0,0,0.5))"}}
           />
         </Box>
         <Table>

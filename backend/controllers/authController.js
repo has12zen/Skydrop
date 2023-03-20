@@ -9,6 +9,7 @@ const { getAuth } = require("firebase-admin/auth");
 
 exports.verifyToken = catchAsync(async (req, res, next) => {
   const { accessToken } = req.cookies;
+  console.log({accessToken})
 
   if (!accessToken)
     return next(
@@ -44,6 +45,7 @@ exports.restrictTo = (...roles) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   let user = await User.getUserByEmail(req.user.email);
+
 
   if (!user) {
     await User.create({

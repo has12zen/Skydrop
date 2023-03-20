@@ -17,7 +17,9 @@ const signToken = (token) => {
 
 exports.verifyToken = catchAsync(async (req, res, next) => {
   let { accessToken } = req.body;
+  console.log({Cookies:req.cookies})
   if (!accessToken) {
+
     accessToken = await promisify(jwt.verify)(
       req.cookies.jwt,
       process.env.JWT_SECRET

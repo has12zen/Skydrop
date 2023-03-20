@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 dotenv.config();
+const {promisify} = require("util");
 const jwt = require('jsonwebtoken');
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
@@ -7,15 +8,15 @@ const AppError = require("../utils/appError");
 
 const { getAuth } = require("firebase-admin/auth");
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (token) => {
+  return jwt.sign({ token }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 exports.verifyToken = catchAsync(async (req, res, next) => {
   let { accessToken } = req.body;
-  if(!accessToken) accessToken = req.cookies.jwt;
+  if(!accessToken) accessToken = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
 
   console.log({accessToken});
 

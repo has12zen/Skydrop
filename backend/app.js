@@ -26,7 +26,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/requests", requestRoutes);
 app.use("/api/drones", droneRoutes);
-
+app.get("/api/heartbeat", (req, res) => {
+  res.send("Hello World!");
+});
 app.all("*", async (req, res, next) => {
   // if (req.originalUrl.startsWith("/api")) {
   return next(

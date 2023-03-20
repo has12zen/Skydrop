@@ -8,8 +8,8 @@ const AppError = require("../utils/appError");
 const { getAuth } = require("firebase-admin/auth");
 
 exports.verifyToken = catchAsync(async (req, res, next) => {
-  const { accessToken } = req.cookies;
-  console.log({accessToken})
+  const { accessToken } = body;
+  console.log({accessToken});
 
   if (!accessToken)
     return next(
